@@ -9,7 +9,11 @@ class TortureTest < Minitest::Spec
   end
 
   it do
-    html, graph = Torture::Page::HTML.new(nil).(:show, page: "pages/activity.md", path: "test/cms", layout: "layouts/doc")
+    html, graph = Torture::Server.compile_page(
+      page: "pages/activity.md",
+      path: "test/cms",
+      layout: "layouts/doc"
+    )
 
 # FIXME: p around comments???
 # FIXME: p around span???

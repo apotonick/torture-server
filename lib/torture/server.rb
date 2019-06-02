@@ -5,8 +5,12 @@ require "kramdown"
 
 module Torture
   module Server
-    class Error < StandardError; end
-    # Your code goes here...
+    module_function
+
+    # HTML without TOCs substituted.
+    def compile_page(page:, path:, layout:)
+      Page::HTML.new(nil).(:show, page: page, path: path, layout: layout)
+    end
   end
 end
 
