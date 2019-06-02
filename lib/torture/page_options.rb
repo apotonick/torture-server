@@ -83,22 +83,4 @@ module Torture
       end
     end
   end
-  # Parse the `:page` and extract its options.
-  # DISCUSS: currently unused.
-  class PageOptions < Cell::ViewModel
-    include Cell::Erb
-
-    def call(page:, path:)
-      render view: page, prefixes: [path]
-
-      @options or raise "No <%= page %> call in #{page}"
-    end
-
-    def page(options)
-      @options = options
-    end
-
-    def method_missing(*) # all other helpers
-    end
-  end
 end

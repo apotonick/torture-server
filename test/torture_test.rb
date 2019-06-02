@@ -4,15 +4,9 @@ require "torture/server"
 
 class TortureTest < Minitest::Spec
   it do
-    pp options = Torture::PageOptions.new(nil).(page: "pages/activity.md", path: "test/cms")
-    options.must_equal({:title=>"Activity"})
-  end
-
-  it do
     html, graph = Torture::Server.compile_page(
-      page: "pages/activity.md",
-      path: "test/cms",
-      layout: "layouts/doc"
+      page:   "test/cms/pages/activity.md",
+      layout: "test/cms/layouts/doc"
     )
 
 # FIXME: p around comments???
