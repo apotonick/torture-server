@@ -8,6 +8,11 @@ module Torture
     module_function
 
     # HTML without TOCs substituted.
+    #
+    # activity.md.erb
+    #   snippets :intro, :debugging
+    #
+    # => html with toc, toc graph
     def compile_page(page:, path:, layout:)
       Page::HTML.new(nil).(:show, page: page, path: path, layout: layout)
     end

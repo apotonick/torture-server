@@ -27,4 +27,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "minitest", "~> 5.0"
 
   spec.add_dependency "kramdown"
+  spec.add_dependency "cells"
+  spec.add_dependency "cells-erb"
 end
