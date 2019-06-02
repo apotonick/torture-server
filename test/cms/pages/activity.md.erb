@@ -1,0 +1,14 @@
+<%= page title: "Activity" %>
+
+<%= h2 "Header" %>
+
+Some text.
+
+and more.
+
+# Title!
+
+<%= snippets(
+  "snippets/activity/intro"     =>  {root: "../trailblazer-activity-dsl-linear/test/docs", file: "basics_test.rb"},
+  "snippets/activity/low_level" => {root: "../trailblazer-activity/test/docs", file: "activity_test.rb"},
+) %>
