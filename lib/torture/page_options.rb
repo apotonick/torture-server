@@ -58,6 +58,9 @@ module Torture
       def toc
         %{<%= table_of_content %>}
       end
+      def right_sidebars
+        %{<%= right_sidebars %>}
+      end
 
       def h2(title)
         %{<h2>#{title}</h2>}
