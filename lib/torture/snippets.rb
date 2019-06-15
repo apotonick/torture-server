@@ -16,8 +16,12 @@ class Snippets < Cell::ViewModel
   end
 
   def code(*args)
+    dont_extract = @model[:extract]===false
+
+    code = dont_extract ? "" : extract(*args)
+
     %{<pre><code class="ruby light code-snippet wow fadeIn">
-#{extract(*args)}</code></pre>}
+#{code}</code></pre>}
   end
 
   def show(snippet:, path:)

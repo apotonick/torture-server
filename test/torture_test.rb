@@ -3,6 +3,8 @@ require "test_helper"
 require "torture/server"
 
 class TortureTest < Minitest::Spec
+
+# page with snippets and code that gets extracted
   it do
     html, graph = Torture::Server.compile_page(
       page:   "test/cms/pages/activity.md",
@@ -27,6 +29,15 @@ class TortureTest < Minitest::Spec
 <h2 id=\"Activity-Intro\">Intro</h2>
 <p><!-- {Activity-Intro-toc} -->Hello!</p>
 
+<pre><code class=\"ruby light code-snippet wow fadeIn\">
+true.must_equal true
+</code></pre>
+<p>Great, and then.</p>
+
+<pre><code class=\"ruby light code-snippet wow fadeIn\">
+9.must_equal 9
+</code></pre>
+
 <p><span class=\"divider\"></span></p>
 
 <h2 id=\"Activity-Low Level\">Low Level</h2>
@@ -35,7 +46,11 @@ class TortureTest < Minitest::Spec
 <p><span class=\"divider\"></span></p>
 
 <h3 id=\"Activity-Low Level-Deep &amp; profound\">Deep &amp; profound</h3>
-<p><!-- {Activity-Low Level-Deep & profound-toc} --></p>
+<p><!-- {Activity-Low Level-Deep & profound-toc} -->test</p>
+
+<pre><code class=\"ruby light code-snippet wow fadeIn\">
+99.must_equal 99
+</code></pre>
 </html>
 }
 
@@ -58,6 +73,15 @@ class TortureTest < Minitest::Spec
 <h2 id=\"Activity-Intro\">Intro</h2>
 <p><!-- {Activity-Intro-toc} -->Hello!</p>
 
+<pre><code class=\"ruby light code-snippet wow fadeIn\">
+true.must_equal true
+</code></pre>
+<p>Great, and then.</p>
+
+<pre><code class=\"ruby light code-snippet wow fadeIn\">
+9.must_equal 9
+</code></pre>
+
 <p><span class=\"divider\"></span></p>
 
 <h2 id=\"Activity-Low Level\">Low Level</h2>
@@ -66,7 +90,57 @@ class TortureTest < Minitest::Spec
 <p><span class=\"divider\"></span></p>
 
 <h3 id=\"Activity-Low Level-Deep &amp; profound\">Deep &amp; profound</h3>
-<p><!-- {Activity-Low Level-Deep & profound-toc} --></p>
+<p><!-- {Activity-Low Level-Deep & profound-toc} -->test</p>
+
+<pre><code class=\"ruby light code-snippet wow fadeIn\">
+99.must_equal 99
+</code></pre>
+</html>
+}
+  end
+
+# page with snippets and code that gets SUPPRESSED.
+  it do
+    html, graph = Torture::Server.compile_page(
+      page:   "test/cms/pages/activity.md",
+      layout: "test/cms/layouts/doc",
+      extract: false
+    )
+
+    html.must_equal %{<html>
+  <title>
+    Activity  </title>
+  <%= table_of_content %>  <h2>Header</h2>
+<p>Some text.</p>
+
+<p>and more.</p>
+
+<h1 id=\"title\">Title!</h1>
+
+<p><span class=\"divider\"></span></p>
+
+<h2 id=\"Activity-Intro\">Intro</h2>
+<p><!-- {Activity-Intro-toc} -->Hello!</p>
+
+<pre><code class=\"ruby light code-snippet wow fadeIn\">
+</code></pre>
+<p>Great, and then.</p>
+
+<pre><code class=\"ruby light code-snippet wow fadeIn\">
+</code></pre>
+
+<p><span class=\"divider\"></span></p>
+
+<h2 id=\"Activity-Low Level\">Low Level</h2>
+<p><!-- {Activity-Low Level-toc} -->Deeper.</p>
+
+<p><span class=\"divider\"></span></p>
+
+<h3 id=\"Activity-Low Level-Deep &amp; profound\">Deep &amp; profound</h3>
+<p><!-- {Activity-Low Level-Deep & profound-toc} -->test</p>
+
+<pre><code class=\"ruby light code-snippet wow fadeIn\">
+</code></pre>
 </html>
 }
   end

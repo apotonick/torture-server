@@ -14,8 +14,9 @@ module Torture
         ""
       end
 
-      def show(page:, path:, layout:)
-        @path = path # FIXME
+      def show(page:, path:, layout:, **snippets_options)
+        @path         = path # FIXME
+        @snippets_options = snippets_options # FIXME: options passed to "sub cells" that are rendered via `snippets`
 
         html = render(view: page, prefixes: [path], layout: layout)
       end
@@ -37,7 +38,7 @@ module Torture
         page = options.collect do |snippet_name, _options|
           _options = _options.merge(h1: page_header)
 
-          cell = Snippets.new(**_options)
+          cell = Snippets.new(**_options, **@snippets_options)
 
 
           html = cell.(:show, snippet: snippet_name, path: @path)
