@@ -38,19 +38,34 @@ class Snippets < Cell::ViewModel
     @headers = {1 => [h1], 2 => [], 3 => [], 4 => [], 5 => []} # mutable state, hmm.
   end
 
-  # Currently called "book".
-  def h2(title, name: title, level:2, display_title: title, html:nil, **)
+  # TODO: make library call
+  private def header_for(title, level)
     top_header = @headers[level-1].last
     raise title unless top_header
 
     @headers[level] << header = Torture::Toc::Header(title, level, top_header)
     top_header.items << header
 
-    header = html || %{<h#{level} id="#{header.id}">#{display_title}</h#{level}> <!-- {#{header.id}-toc} -->}
-
+    return header, top_header
+  end
+  private def render_header(html)
     %{<span class="divider"></span>
 
-#{header}}
+#{html}}
+  end
+
+  # 1 header_for
+  # 2 template = <a>{bla}
+  # 3 parse_template (Cell.render template, options{id: header.id, title: title, ...})
+  # 4 render_header
+
+  # Currently called "book".
+  def h2(title, name: title, level:2, display_title: title, **)
+    header, top_header = header_for(title, level)
+
+    header = %{<h#{level} id="#{header.id}">#{display_title}</h#{level}> <!-- {#{header.id}-toc} -->}
+
+    render_header(header)
   end
 
   # Currently called "chapter".
@@ -58,16 +73,15 @@ class Snippets < Cell::ViewModel
     h2(title, level: 3, **options)
   end
 
-  def h4(title, level:4, **options)
-    top_header = @headers[level-1].last
+  def h4(title, level:4, **options) # FIXME: test me.
+    header, top_header = header_for(title, level)
 
-    breadcrumb = %{<ul class="navigation" id="">
+    breadcrumb = %{<ul class="navigation" id="#{header.id}">
     <li>#{top_header.title}</li>
     <li>#{title}</li>
 </ul>
 }
-
-    h2(title, html: breadcrumb, level: level, **options)
+    render_header(breadcrumb)
   end
 
 
