@@ -76,9 +76,9 @@ class Snippets < Cell::ViewModel
   def h4(title, level:4, **options) # FIXME: test me.
     header, top_header = header_for(title, level)
 
-    breadcrumb = %{<ul class="navigation" id="#{header.id}">
+    breadcrumb = %{<ul class="navigation">
     <li>#{top_header.title}</li>
-    <li>#{title}</li>
+    <li id="#{header.id}">#{title}</li>
 </ul>
 }
     render_header(breadcrumb)
