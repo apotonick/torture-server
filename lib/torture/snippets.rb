@@ -17,8 +17,14 @@ class Snippets < Cell::ViewModel
 
   def code(*args)
     dont_extract = @model[:extract]===false
+    code = ""
 
-    code = dont_extract ? "" : extract(*args)
+    if block_given? # TODO: test me!!!
+      dont_extract = true
+      code = yield.chomp
+    end
+
+    code = dont_extract ? code : extract(*args)
 
     %{<pre><code class="ruby light code-snippet wow fadeIn">
 #{code}</code></pre>}

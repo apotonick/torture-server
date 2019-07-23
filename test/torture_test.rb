@@ -51,6 +51,8 @@ true.must_equal true
 <pre><code class=\"ruby light code-snippet wow fadeIn\">
 99.must_equal 99
 </code></pre>
+<pre><code class=\"ruby light code-snippet wow fadeIn\">
+and profound</code></pre>
 </html>
 }
 
@@ -95,6 +97,8 @@ true.must_equal true
 <pre><code class=\"ruby light code-snippet wow fadeIn\">
 99.must_equal 99
 </code></pre>
+<pre><code class=\"ruby light code-snippet wow fadeIn\">
+and profound</code></pre>
 </html>
 }
   end
@@ -141,6 +145,8 @@ true.must_equal true
 
 <pre><code class=\"ruby light code-snippet wow fadeIn\">
 </code></pre>
+<pre><code class=\"ruby light code-snippet wow fadeIn\">
+and profound</code></pre>
 </html>
 }
   end
