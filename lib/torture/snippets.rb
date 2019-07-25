@@ -36,12 +36,10 @@ class Snippets < Cell::ViewModel
     content
   end
 
-  def initialize(h1:, **options)
+  def initialize(headers:, **options)
     super
 
-
-# FIXME: top header, where does it come from?
-    @headers = {1 => [h1], 2 => [], 3 => [], 4 => [], 5 => []} # mutable state, hmm.
+    @headers = headers
   end
 
   # TODO: make library call

@@ -35,8 +35,10 @@ module Torture
 
         level_to_header = {}
 
+        headers = {1 => [page_header], 2 => [], 3 => [], 4 => [], 5 => []} # mutable state, hmm.
+
         page = options.collect do |snippet_name, _options|
-          _options = _options.merge(h1: page_header)
+          _options = _options.merge(headers: headers)
 
           cell = Snippets.new(**_options, **@snippets_options)
 
