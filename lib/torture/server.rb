@@ -13,8 +13,8 @@ module Torture
     #   snippets :intro, :debugging
     #
     # => html with toc, toc graph
-    def compile_page(page:, layout:, **options)
-      Page::HTML.new(nil).(:show, page: page, path: "./", layout: layout, **options)
+    def compile_page(page:, layout:, model:, **options)
+      Page::HTML.new(model).(:show, page: page, path: "./", layout: layout, **options)
     end
   end
 end

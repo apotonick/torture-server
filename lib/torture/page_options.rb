@@ -77,6 +77,10 @@ module Torture
       # def layout
       #   @options[:layout] or raise
       # end
+
+      def method_missing(name)
+        @model.send(name) # TODO: TEST ME. this is for e.g. <%= navigation_header %>
+      end
     end
 
     class Final < Cell::ViewModel
