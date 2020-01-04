@@ -64,6 +64,9 @@ module Torture
       def right_sidebars
         %{<%= right_sidebars %>}
       end
+      def search_map
+        %{<%= search_map %>}
+      end
 
       def h2(title)
         %{<h2>#{title}</h2>}
