@@ -8,7 +8,8 @@ class TortureTest < Minitest::Spec
   it do
     html, graph = Torture::Server.compile_page(
       page:   "test/cms/pages/activity.md",
-      layout: "test/cms/layouts/doc"
+      layout: "test/cms/layouts/doc",
+      model: nil,
     )
 
 # FIXME: p around comments???
@@ -108,7 +109,8 @@ and profound</code></pre>
     html, graph = Torture::Server.compile_page(
       page:   "test/cms/pages/activity.md",
       layout: "test/cms/layouts/doc",
-      extract: false
+      extract: false,
+      model: nil,
     )
 
     html.must_equal %{<html>
