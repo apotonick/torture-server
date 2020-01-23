@@ -43,11 +43,11 @@ class Snippets < Cell::ViewModel
   end
 
   # TODO: make library call
-  private def header_for(title, level)
+  private def header_for(title, permalink, level)
     top_header = @headers[level-1].last
     raise title unless top_header
 
-    @headers[level] << header = Torture::Toc::Header(title, level, top_header)
+    @headers[level] << header = Torture::Toc::Header(level, title, permalink, top_header)
     top_header.items << header
 
     return header, top_header
@@ -64,8 +64,8 @@ class Snippets < Cell::ViewModel
   # 4 render_header
 
   # Currently called "book".
-  def h2(title, name: title, level:2, display_title: title, **)
-    header, top_header = header_for(title, level)
+  def h2(title, permalink: title, name: title, level:2, display_title: title, **)
+    header, top_header = header_for(title, permalink, level)
 
     header = %{<h#{level} id="#{header.id}">#{display_title}</h#{level}> <!-- {#{header.id}-toc} -->}
 
@@ -77,8 +77,8 @@ class Snippets < Cell::ViewModel
     h2(title, level: 3, **options)
   end
 
-  def h4(title, level:4, **options) # FIXME: test me.
-    header, top_header = header_for(title, level)
+  def h4(title, permalink: title, level:4, **options) # FIXME: test me.
+    header, top_header = header_for(title, permalink, level)
 
     breadcrumb = %{<ul class="navigation">
     <li>#{top_header.title}</li>

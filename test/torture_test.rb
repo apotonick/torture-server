@@ -27,8 +27,8 @@ class TortureTest < Minitest::Spec
 
 <p><span class=\"divider\"></span></p>
 
-<h2 id=\"activity-intro\">Intro</h2>
-<p><!-- {activity-intro-toc} -->Hello!</p>
+<h2 id=\"activity-introduction\">Intro</h2>
+<p><!-- {activity-introduction-toc} -->Hello!</p>
 
 <pre><code class=\"ruby light code-snippet wow fadeIn\">
 true.must_equal true
@@ -38,6 +38,10 @@ true.must_equal true
 <pre><code class=\"ruby light code-snippet wow fadeIn\">
 9.must_equal 9
 </code></pre>
+<p><span class=\"divider\"></span></p>
+
+<h3 id=\"activity-introduction-bye-bye\">Bye</h3>
+<p><!-- {activity-introduction-bye-bye-toc} --></p>
 
 <p><span class=\"divider\"></span></p>
 
@@ -57,7 +61,7 @@ and profound</code></pre>
 </html>
 }
 
-    graph.inspect.must_equal %{#<struct Torture::Page::HTML::Graph level_to_header={1=>[#<struct Torture::Toc::Header title=\"Activity\", level=1, id=\"activity\", items=[#<struct Torture::Toc::Header title=\"Intro\", level=2, id=\"activity-intro\", items=[]>, #<struct Torture::Toc::Header title=\"Low Level\", level=2, id=\"activity-low-level\", items=[#<struct Torture::Toc::Header title=\"Deep & profound\", level=3, id=\"activity-low-level-deep-profound\", items=[]>]>]>, #<struct Torture::Toc::Header title=\"Activity\", level=1, id=\"activity\", items=[#<struct Torture::Toc::Header title=\"Intro\", level=2, id=\"activity-intro\", items=[]>, #<struct Torture::Toc::Header title=\"Low Level\", level=2, id=\"activity-low-level\", items=[#<struct Torture::Toc::Header title=\"Deep & profound\", level=3, id=\"activity-low-level-deep-profound\", items=[]>]>]>], 2=>[#<struct Torture::Toc::Header title=\"Intro\", level=2, id=\"activity-intro\", items=[]>, #<struct Torture::Toc::Header title=\"Low Level\", level=2, id=\"activity-low-level\", items=[#<struct Torture::Toc::Header title=\"Deep & profound\", level=3, id=\"activity-low-level-deep-profound\", items=[]>]>, #<struct Torture::Toc::Header title=\"Intro\", level=2, id=\"activity-intro\", items=[]>], 3=>[#<struct Torture::Toc::Header title=\"Deep & profound\", level=3, id=\"activity-low-level-deep-profound\", items=[]>], 4=>[], 5=>[]}, page_header=#<struct Torture::Toc::Header title=\"Activity\", level=1, id=\"activity\", items=[#<struct Torture::Toc::Header title=\"Intro\", level=2, id=\"activity-intro\", items=[]>, #<struct Torture::Toc::Header title=\"Low Level\", level=2, id=\"activity-low-level\", items=[#<struct Torture::Toc::Header title=\"Deep & profound\", level=3, id=\"activity-low-level-deep-profound\", items=[]>]>]>>}
+    graph.inspect.must_equal %{#<struct Torture::Page::HTML::Graph level_to_header={1=>[#<struct Torture::Toc::Header title=\"Activity\", level=1, id=\"activity\", items=[#<struct Torture::Toc::Header title=\"Intro\", level=2, id=\"activity-introduction\", items=[#<struct Torture::Toc::Header title=\"Bye\", level=3, id=\"activity-introduction-bye-bye\", items=[]>]>, #<struct Torture::Toc::Header title=\"Low Level\", level=2, id=\"activity-low-level\", items=[#<struct Torture::Toc::Header title=\"Deep & profound\", level=3, id=\"activity-low-level-deep-profound\", items=[]>]>]>, #<struct Torture::Toc::Header title=\"Activity\", level=1, id=\"activity\", items=[#<struct Torture::Toc::Header title=\"Intro\", level=2, id=\"activity-introduction\", items=[#<struct Torture::Toc::Header title=\"Bye\", level=3, id=\"activity-introduction-bye-bye\", items=[]>]>, #<struct Torture::Toc::Header title=\"Low Level\", level=2, id=\"activity-low-level\", items=[#<struct Torture::Toc::Header title=\"Deep & profound\", level=3, id=\"activity-low-level-deep-profound\", items=[]>]>]>], 2=>[#<struct Torture::Toc::Header title=\"Intro\", level=2, id=\"activity-introduction\", items=[#<struct Torture::Toc::Header title=\"Bye\", level=3, id=\"activity-introduction-bye-bye\", items=[]>]>, #<struct Torture::Toc::Header title=\"Low Level\", level=2, id=\"activity-low-level\", items=[#<struct Torture::Toc::Header title=\"Deep & profound\", level=3, id=\"activity-low-level-deep-profound\", items=[]>]>, #<struct Torture::Toc::Header title=\"Intro\", level=2, id=\"activity-introduction\", items=[#<struct Torture::Toc::Header title=\"Bye\", level=3, id=\"activity-introduction-bye-bye\", items=[]>]>], 3=>[#<struct Torture::Toc::Header title=\"Bye\", level=3, id=\"activity-introduction-bye-bye\", items=[]>, #<struct Torture::Toc::Header title=\"Deep & profound\", level=3, id=\"activity-low-level-deep-profound\", items=[]>, #<struct Torture::Toc::Header title=\"Bye\", level=3, id=\"activity-introduction-bye-bye\", items=[]>], 4=>[], 5=>[]}, page_header=#<struct Torture::Toc::Header title=\"Activity\", level=1, id=\"activity\", items=[#<struct Torture::Toc::Header title=\"Intro\", level=2, id=\"activity-introduction\", items=[#<struct Torture::Toc::Header title=\"Bye\", level=3, id=\"activity-introduction-bye-bye\", items=[]>]>, #<struct Torture::Toc::Header title=\"Low Level\", level=2, id=\"activity-low-level\", items=[#<struct Torture::Toc::Header title=\"Deep & profound\", level=3, id=\"activity-low-level-deep-profound\", items=[]>]>]>>}
 
     html_with_toc = Torture::Page::Final.new(nil).(:show, table_of_content: "_TOC_", html: html)
 
@@ -73,8 +77,8 @@ and profound</code></pre>
 
 <p><span class=\"divider\"></span></p>
 
-<h2 id=\"activity-intro\">Intro</h2>
-<p><!-- {activity-intro-toc} -->Hello!</p>
+<h2 id=\"activity-introduction\">Intro</h2>
+<p><!-- {activity-introduction-toc} -->Hello!</p>
 
 <pre><code class=\"ruby light code-snippet wow fadeIn\">
 true.must_equal true
@@ -84,6 +88,10 @@ true.must_equal true
 <pre><code class=\"ruby light code-snippet wow fadeIn\">
 9.must_equal 9
 </code></pre>
+<p><span class=\"divider\"></span></p>
+
+<h3 id=\"activity-introduction-bye-bye\">Bye</h3>
+<p><!-- {activity-introduction-bye-bye-toc} --></p>
 
 <p><span class=\"divider\"></span></p>
 
@@ -125,8 +133,8 @@ and profound</code></pre>
 
 <p><span class=\"divider\"></span></p>
 
-<h2 id=\"activity-intro\">Intro</h2>
-<p><!-- {activity-intro-toc} -->Hello!</p>
+<h2 id=\"activity-introduction\">Intro</h2>
+<p><!-- {activity-introduction-toc} -->Hello!</p>
 
 <pre><code class=\"ruby light code-snippet wow fadeIn\">
 </code></pre>
@@ -134,6 +142,10 @@ and profound</code></pre>
 
 <pre><code class=\"ruby light code-snippet wow fadeIn\">
 </code></pre>
+<p><span class=\"divider\"></span></p>
+
+<h3 id=\"activity-introduction-bye-bye\">Bye</h3>
+<p><!-- {activity-introduction-bye-bye-toc} --></p>
 
 <p><span class=\"divider\"></span></p>
 

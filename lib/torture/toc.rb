@@ -9,11 +9,11 @@ module Torture
     ]
   end
 
-    module Toc
+  module Toc
     Header = Struct.new(:title, :level, :id, :items)
 
-    def self.Header(title, level, higher_header)
-      id = [higher_header[:id], title].compact.join("-").downcase.gsub(/[^\w]/, "-").gsub(/-{2,}/, "-") # TODO: unit-test, asshole!
+    def self.Header(level, title, permalink, higher_header)
+      id = [higher_header[:id], permalink].compact.join("-").downcase.gsub(/[^\w]/, "-").gsub(/-{2,}/, "-") # TODO: unit-test, asshole!
 
       Header.new(title, level, id, [])
     end
