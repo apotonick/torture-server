@@ -25,9 +25,7 @@ class Snippets < Cell::ViewModel
     end
 
     code = dont_extract ? code : extract(*args)
-
-    %{<pre><code class="ruby light code-snippet wow fadeIn">
-#{code}</code></pre>}
+    Kramdown::Document.new("\n\t#{code.gsub("\n", "\n\t")}").to_html
   end
 
   def show(snippet:, path:)
