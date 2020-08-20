@@ -31,7 +31,7 @@ module Torture
 
       # Render all snippets in one page. This is called within activity.md.erb, for example.
       def snippets(options)
-        page_header = Torture::Toc.Header(title, 1, {id: nil}) # FIXME: remove mutability.
+        page_header = Torture::Toc.Header(1, title, title, {id: nil}) # FIXME: remove mutability.
 
         level_to_header = {}
 
