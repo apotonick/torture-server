@@ -17,8 +17,12 @@ class TortureTest < Minitest::Spec
 
     html.must_equal %{<html>
   <title>
-    Activity  </title>
-  <%= table_of_content %>  <h2>Header</h2>
+    Activity
+  </title>
+  <%= table_of_content %>
+  
+<h2>Header</h2>
+
 <p>Some text.</p>
 
 <p>and more.</p>
@@ -28,32 +32,43 @@ class TortureTest < Minitest::Spec
 <p><span class=\"divider\"></span></p>
 
 <h2 id=\"activity-intro\">Intro</h2>
-<p><!-- {activity-intro-toc} -->Hello!</p>
+<p><!-- {activity-intro-toc} --></p>
 
-<pre><code class=\"ruby light code-snippet wow fadeIn\">
+<p>Hello!</p>
+
+<pre><code># basics_test.rb
+
 true.must_equal true
 </code></pre>
+
 <p>Great, and then.</p>
 
-<pre><code class=\"ruby light code-snippet wow fadeIn\">
+<pre><code># concepts/more.rb
+
 9.must_equal 9
 </code></pre>
 
 <p><span class=\"divider\"></span></p>
 
 <h2 id=\"activity-low-level\">Low Level</h2>
-<p><!-- {activity-low-level-toc} -->Deeper.</p>
+<p><!-- {activity-low-level-toc} --></p>
+
+<p>Deeper.</p>
 
 <p><span class=\"divider\"></span></p>
 
 <h3 id=\"activity-low-level-deep-profound\">Deep &amp; profound</h3>
-<p><!-- {activity-low-level-deep-profound-toc} -->test</p>
+<p><!-- {activity-low-level-deep-profound-toc} --></p>
 
-<pre><code class=\"ruby light code-snippet wow fadeIn\">
-99.must_equal 99
+<p>test</p>
+
+<pre><code>99.must_equal 99
 </code></pre>
-<pre><code class=\"ruby light code-snippet wow fadeIn\">
-and profound</code></pre>
+
+<pre><code>and profound
+</code></pre>
+
+
 </html>
 }
 
@@ -63,8 +78,12 @@ and profound</code></pre>
 
     html_with_toc.must_equal %{<html>
   <title>
-    Activity  </title>
-  _TOC_  <h2>Header</h2>
+    Activity
+  </title>
+  _TOC_
+  
+<h2>Header</h2>
+
 <p>Some text.</p>
 
 <p>and more.</p>
@@ -74,32 +93,43 @@ and profound</code></pre>
 <p><span class=\"divider\"></span></p>
 
 <h2 id=\"activity-intro\">Intro</h2>
-<p><!-- {activity-intro-toc} -->Hello!</p>
+<p><!-- {activity-intro-toc} --></p>
 
-<pre><code class=\"ruby light code-snippet wow fadeIn\">
+<p>Hello!</p>
+
+<pre><code># basics_test.rb
+
 true.must_equal true
 </code></pre>
+
 <p>Great, and then.</p>
 
-<pre><code class=\"ruby light code-snippet wow fadeIn\">
+<pre><code># concepts/more.rb
+
 9.must_equal 9
 </code></pre>
 
 <p><span class=\"divider\"></span></p>
 
 <h2 id=\"activity-low-level\">Low Level</h2>
-<p><!-- {activity-low-level-toc} -->Deeper.</p>
+<p><!-- {activity-low-level-toc} --></p>
+
+<p>Deeper.</p>
 
 <p><span class=\"divider\"></span></p>
 
 <h3 id=\"activity-low-level-deep-profound\">Deep &amp; profound</h3>
-<p><!-- {activity-low-level-deep-profound-toc} -->test</p>
+<p><!-- {activity-low-level-deep-profound-toc} --></p>
 
-<pre><code class=\"ruby light code-snippet wow fadeIn\">
-99.must_equal 99
+<p>test</p>
+
+<pre><code>99.must_equal 99
 </code></pre>
-<pre><code class=\"ruby light code-snippet wow fadeIn\">
-and profound</code></pre>
+
+<pre><code>and profound
+</code></pre>
+
+
 </html>
 }
   end
@@ -115,8 +145,12 @@ and profound</code></pre>
 
     html.must_equal %{<html>
   <title>
-    Activity  </title>
-  <%= table_of_content %>  <h2>Header</h2>
+    Activity
+  </title>
+  <%= table_of_content %>
+  
+<h2>Header</h2>
+
 <p>Some text.</p>
 
 <p>and more.</p>
@@ -126,29 +160,30 @@ and profound</code></pre>
 <p><span class=\"divider\"></span></p>
 
 <h2 id=\"activity-intro\">Intro</h2>
-<p><!-- {activity-intro-toc} -->Hello!</p>
+<p><!-- {activity-intro-toc} --></p>
 
-<pre><code class=\"ruby light code-snippet wow fadeIn\">
-</code></pre>
+<p>Hello!</p>
+
 <p>Great, and then.</p>
-
-<pre><code class=\"ruby light code-snippet wow fadeIn\">
-</code></pre>
 
 <p><span class=\"divider\"></span></p>
 
 <h2 id=\"activity-low-level\">Low Level</h2>
-<p><!-- {activity-low-level-toc} -->Deeper.</p>
+<p><!-- {activity-low-level-toc} --></p>
+
+<p>Deeper.</p>
 
 <p><span class=\"divider\"></span></p>
 
 <h3 id=\"activity-low-level-deep-profound\">Deep &amp; profound</h3>
-<p><!-- {activity-low-level-deep-profound-toc} -->test</p>
+<p><!-- {activity-low-level-deep-profound-toc} --></p>
 
-<pre><code class=\"ruby light code-snippet wow fadeIn\">
+<p>test</p>
+
+<pre><code>and profound
 </code></pre>
-<pre><code class=\"ruby light code-snippet wow fadeIn\">
-and profound</code></pre>
+
+
 </html>
 }
   end
