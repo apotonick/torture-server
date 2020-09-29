@@ -12,7 +12,16 @@ class Snippets < Cell::ViewModel
   def extract(section, **options)
     options = @model.merge(collapse: nil, unindent: true, **options)
 
-    Torture::Snippet.extract_from(file: File.join(options[:root], options[:file]), marker: section, collapse: options[:collapse], unindent: options[:unindent])
+    file = File.join(options[:root], options[:file])
+    filename = options[:show_filename] == true ? options[:file] : options[:show_filename]
+
+    Torture::Snippet.extract_from(
+      file: file,
+      filename: filename,
+      marker: section,
+      collapse: options[:collapse],
+      unindent: options[:unindent],
+    )
   end
 
   def code(*args)
