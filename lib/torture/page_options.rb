@@ -21,7 +21,7 @@ module Torture
         html = render(view: page, prefixes: [path], layout: layout)
       end
 
-      def call(*)
+      def call(*args, **kws)
         return super, @graph
       end
 
@@ -88,7 +88,9 @@ module Torture
         render view: html, locals: {**locals}
       end
 
-      def find_template(view:, **, &block)
+      def find_template(options, &block)
+        view = options[:view]
+
         template = Tilt::ERBTemplate.new { view }
       end
     end

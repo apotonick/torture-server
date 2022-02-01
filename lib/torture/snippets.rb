@@ -15,7 +15,7 @@ class Snippets < Cell::ViewModel
     Torture::Snippet.extract_from(file: File.join(options[:root], options[:file]), marker: section, collapse: options[:collapse], unindent: options[:unindent])
   end
 
-  def code(*args)
+  def code(*args, **kws)
     dont_extract = @model[:extract]===false
     code = ""
 
@@ -24,7 +24,7 @@ class Snippets < Cell::ViewModel
       code = yield.chomp
     end
 
-    code = dont_extract ? code : extract(*args)
+    code = dont_extract ? code : extract(*args, **kws)
     Kramdown::Document.new("\n\t#{code.gsub("\n", "\n\t")}").to_html
   end
 
@@ -41,11 +41,11 @@ class Snippets < Cell::ViewModel
   end
 
   # TODO: make library call
-  private def header_for(title, level)
+  private def header_for(title, level, **options)
     top_header = @headers[level-1].last
     raise title unless top_header
 
-    @headers[level] << header = Torture::Toc::Header(title, level, top_header)
+    @headers[level] << header = Torture::Toc::Header(title, level, top_header, **options)
     top_header.items << header
 
     return header, top_header
@@ -76,7 +76,7 @@ class Snippets < Cell::ViewModel
   end
 
   def h4(title, level:4, **options) # FIXME: test me.
-    header, top_header = header_for(title, level)
+    header, top_header = header_for(title, level, **options)
 
     breadcrumb = %{<ul class="navigation">
     <li>#{top_header.title}</li>
