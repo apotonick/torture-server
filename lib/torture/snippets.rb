@@ -12,7 +12,8 @@ class Snippets < Cell::ViewModel
   def extract(section, **options)
     options = @model.merge(collapse: nil, unindent: true, **options)
 
-    Torture::Snippet.extract_from(file: File.join(options[:root], options[:file]), marker: section, collapse: options[:collapse], unindent: options[:unindent])
+    # FIXME: better options passing!
+    Torture::Snippet.extract_from(file: File.join(options[:root], options[:file]), marker: section, collapse: options[:collapse], unindent: options[:unindent], sub: options[:sub])
   end
 
   def code(*args, **kws)
