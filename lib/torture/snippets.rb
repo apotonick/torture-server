@@ -103,9 +103,9 @@ class Snippets < Cell::ViewModel
   #     <%= code '...' %>
   #   end
   # end
-  def nav_tabs(&block)
+# FIXME: untested.
+  def nav_tabs(id: rand, &block)
     caller_location = caller_locations.first
-    id = "#{caller_location.absolute_path}-#{caller_location.lineno}"
 
     NavTabs.(id, tabs: [], contents: [], &block)
   end
