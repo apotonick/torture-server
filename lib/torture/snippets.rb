@@ -106,8 +106,6 @@ class Snippets < Cell::ViewModel
   # end
 # FIXME: untested.
   def nav_tabs(id: rand, &block)
-    caller_location = caller_locations.first
-
     NavTabs.(id, tabs: [], contents: [], &block)
   end
 
