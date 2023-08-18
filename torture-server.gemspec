@@ -1,4 +1,3 @@
-
 lib = File.expand_path("../lib", __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require "torture/server/version"
@@ -28,6 +27,6 @@ Gem::Specification.new do |spec|
   spec.add_dependency "minitest-line"
 
   spec.add_dependency "kramdown"
-  spec.add_dependency "cells"
-  spec.add_dependency "cells-erb"
+  # spec.add_dependency "cells"
+  # spec.add_dependency "cells-erb"
 end

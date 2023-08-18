@@ -18,14 +18,14 @@ module Torture
 
         # def extract(section, root:, file:, collapse: nil, unindent: true)
         private def extract(section, **options)
-          options = @options.merge(collapse: nil, unindent: true, **options)
+          options = @options.merge(collapse: nil, unindent: true, section: section, **options)
 
-          puts "@@@@@ #{options.inspect}"
+          # puts "@@@@@ #{options.inspect}"
 
           extract_from(**options)
         end
 
-        private def extract_from(root:, file:, section:, collapse:, unindent:, sub:, **)
+        private def extract_from(root:, file:, section: nil, collapse:, unindent:, sub: nil, **) # FIXME: when using {code ruby do...end} all those options don't make sense.
           # Torture::Snippet from the {torture} gem.
           Torture::Snippet.extract_from(file: File.join(root, file), marker: section, collapse: collapse, unindent: unindent, sub: sub)
         end

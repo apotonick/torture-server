@@ -34,6 +34,8 @@ class TortureServerTest < Minitest::Spec
 
     require "torture/snippet"
 
+    require "kramdown"
+
     module My
       module Cell
         class Section # #Torture::Cms::Section
@@ -68,6 +70,29 @@ class TortureServerTest < Minitest::Spec
 
     html = Torture::Cms::Section.({template: template, exec_context: section_cell})
 
-    assert_equal html, %(asdf)
+# puts html
+    assert_equal html, %(<span class="divider"></span>
+
+      <h2 id="reform-reform">Reform</h2> <!-- {reform-reform-toc} -->
+
+Deep stuff.
+
+<span class="divider"></span>
+
+      <h3 id="reform-reform-deep-profound">Deep & profound</h3> <!-- {reform-reform-deep-profound-toc} -->
+
+test
+
+
+<pre><code>99.must_equal 99
+</code></pre>
+
+
+
+
+<pre><code>and profound
+</code></pre>
+
+)
   end
 end
