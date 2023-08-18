@@ -1,4 +1,4 @@
 $LOAD_PATH.unshift File.expand_path("../../lib", __FILE__)
-require "torture/server"
+# require "torture/server"
 
 require "minitest/autorun"
