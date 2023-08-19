@@ -17,9 +17,9 @@ class TortureServerTest < Minitest::Spec
       "reform" => {
         title: "Reform",
         "2.3" => {
-          snippet_dir: "../reform/test/docs",
-          section_dir: "reform/2.x",
-
+          snippet_dir: "test/code/reform",
+          section_dir: "test/sections/reform",
+          "intro.md.erb" => { snippet_file: "intro_test.rb" }
         }
       }
     }
@@ -28,16 +28,13 @@ class TortureServerTest < Minitest::Spec
     require "cells/__erb__"
 
 
-    require "torture/cms/section"
-    require "torture/cms/helper/header"
-    require "torture/cms/helper/code"
-
-    require "torture/snippet"
+    require "torture/cms"
 
     require "kramdown"
 
     module My
       module Cell
+        # This is delibarately a PORO, and not a cell, to play with the "exec_context" concept.
         class Section # #Torture::Cms::Section
           include Torture::Cms::Helper::Header # needs {headers}
           include Torture::Cms::Helper::Code   # needs {extract}
@@ -57,7 +54,8 @@ class TortureServerTest < Minitest::Spec
 
     # TODO: version "slug"
 
-    template = Cell::Erb::Template.new("test/cms/snippets/reform/intro.md.erb")
+# generate section
+    template = Cell::Erb::Template.new("test/sections/reform/intro.md.erb")
 
     section_cell = My::Cell::Section.new(
       headers: headers,
@@ -73,13 +71,13 @@ class TortureServerTest < Minitest::Spec
 # puts html
     assert_equal html, %(<span class="divider"></span>
 
-      <h2 id="reform-reform">Reform</h2> <!-- {reform-reform-toc} -->
+      <h2 id="reform-introduction">Introduction</h2> <!-- {reform-introduction-toc} -->
 
 Deep stuff.
 
 <span class="divider"></span>
 
-      <h3 id="reform-reform-deep-profound">Deep & profound</h3> <!-- {reform-reform-deep-profound-toc} -->
+      <h3 id="reform-introduction-deep-profound">Deep & profound</h3> <!-- {reform-introduction-deep-profound-toc} -->
 
 test
 
