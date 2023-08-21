@@ -9,6 +9,8 @@ module Torture
 
         # TODO: version "slug"
 
+        ["<h1>#{title}</h1>\n"] + # FIXME
+
         sections.collect do |file_name, options|
           render_section(section_cell: section_cell, file_name: file_name, section_dir: section_dir, snippet_dir: snippet_dir, headers: headers, **options)
         end

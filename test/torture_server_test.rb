@@ -50,14 +50,20 @@ class TortureServerTest < Minitest::Spec
     pages = pages.collect do |name, options|
       Torture::Cms::Site.new.render_versioned_pages(**options, section_cell: My::Cell::Section)
     end
+# pp pages
+
 
     assert_equal pages, [[["4.0",
-   ["<span class=\"divider\"></span>\n" +
+   ["<h1>Cells</h1>\n",
+
+    "<span class=\"divider\"></span>\n" +
     "\n" +
     "      <h2 id=\"cells-what-s-a-cell-\">What's a cell?</h2> <!-- {cells-what-s-a-cell--toc} -->\n"]],
-  ["5.0", []]],
+  ["5.0", ["<h1>Cells</h1>\n",]]],
  [["2.3",
-   ["<span class=\"divider\"></span>\n" +
+   ["<h1>Reform</h1>\n",
+
+    "<span class=\"divider\"></span>\n" +
     "\n" +
     "      <h2 id=\"reform-introduction\">Introduction</h2> <!-- {reform-introduction-toc} -->\n" +
     "\n" +
