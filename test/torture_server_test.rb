@@ -6,12 +6,13 @@ class TortureServerTest < Minitest::Spec
       "cells" => {
         title: "Cells",
         "4.0" => { # "prefix/version"
-          snippet_dir: "../cells/test/docs",
-          section_dir: "cells/4.0",
+          snippet_dir: "test/cells/",
+          section_dir: "test/sections/cells/4.0",
           "overview.md.erb" => { snippet_file: "cell_test.rb" }
         },
         "5.0" => {
-
+          snippet_dir: "test/cells-5/",
+          section_dir: "test/sections/cells/5.0",
         }
       },
       "reform" => {
@@ -45,6 +46,42 @@ class TortureServerTest < Minitest::Spec
         end
       end
     end
+
+    pages = pages.collect do |name, options|
+      Torture::Cms::Site.new.render_versioned_pages(**options, section_cell: My::Cell::Section)
+    end
+
+    assert_equal pages, [[["4.0",
+   ["<span class=\"divider\"></span>\n" +
+    "\n" +
+    "      <h2 id=\"cells-what-s-a-cell-\">What's a cell?</h2> <!-- {cells-what-s-a-cell--toc} -->\n"]],
+  ["5.0", []]],
+ [["2.3",
+   ["<span class=\"divider\"></span>\n" +
+    "\n" +
+    "      <h2 id=\"reform-introduction\">Introduction</h2> <!-- {reform-introduction-toc} -->\n" +
+    "\n" +
+    "Deep stuff.\n" +
+    "\n" +
+    "<span class=\"divider\"></span>\n" +
+    "\n" +
+    "      <h3 id=\"reform-introduction-deep-profound\">Deep & profound</h3> <!-- {reform-introduction-deep-profound-toc} -->\n" +
+    "\n" +
+    "test\n" +
+    "\n" +
+    "\n" +
+    "<pre><code>99.must_equal 99\n" +
+    "</code></pre>\n" +
+    "\n" +
+    "\n" +
+    "\n" +
+    "\n" +
+    "<pre><code>and profound\n" +
+    "</code></pre>\n" +
+    "\n"]]]]
+
+
+
 
     title = "Reform"
     require "torture/toc"
