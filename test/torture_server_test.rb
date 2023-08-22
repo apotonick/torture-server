@@ -25,7 +25,8 @@ class TortureServerTest < Minitest::Spec
           snippet_dir: "test/code/reform",
           section_dir: "test/sections/reform",
           target_file: "test/site/2.1/docs/reform/index.html",
-          "intro.md.erb" => { snippet_file: "intro_test.rb" }
+          "intro.md.erb" => { snippet_file: "intro_test.rb" },
+          "controller.md.erb" => { snippet_file: "intro_test.rb" }, # uses @options[:controller]
         }
       }
     }
@@ -45,15 +46,15 @@ class TortureServerTest < Minitest::Spec
           include Torture::Cms::Helper::Header # needs {headers}
           include Torture::Cms::Helper::Code   # needs {extract}
 
-          def initialize(options)
-            @options = options
+          def initialize(headers:, controller:, **options) # DISCUSS: how to define incoming dependencies?
+            @options = options.merge(headers: headers, controller: controller)
           end
         end
       end
     end
 
-    pages = pages.collect do |name, options|
-      Torture::Cms::Site.new.render_versioned_pages(**options, section_cell: My::Cell::Section)
+    pages = pages.collect do |name, options| # TODO: extract me!
+      Torture::Cms::Site.new.render_versioned_pages(**options, section_cell: My::Cell::Section, section_cell_options: {controller: Object})
     end
 # pp pages
 
@@ -97,6 +98,8 @@ class TortureServerTest < Minitest::Spec
 <pre><code>and profound
 </code></pre>
 
+
+<p>Object</p>
 )
 
 #     assert_equal pages, [[["4.0",

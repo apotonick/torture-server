@@ -4,24 +4,27 @@ module Torture
   module Cms
     class Page
 
-      def render_page(title:, section_cell:, section_dir:, snippet_dir:, target_file:, **sections)
+      def render_page(title:, section_cell:, section_cell_options:, section_dir:, snippet_dir:, target_file:, **sections)
         page_header = Torture::Toc.Header(title, 1, {id: nil}) # FIXME: remove mutability.
         headers     = {1 => [page_header], 2 => [], 3 => [], 4 => [], 5 => []} # mutable state, hmm.
 
 
+        level_to_header = {}
         # TODO: version "slug"
 
         ["<h1>#{title}</h1>\n"] + # FIXME
 
         # generate section
         html_sections = sections.collect do |file_name, options|
-          render_section(section_cell: section_cell, file_name: file_name, section_dir: section_dir, snippet_dir: snippet_dir, headers: headers, **options)
+          render_section(section_cell: section_cell, section_cell_options: section_cell_options, file_name: file_name, section_dir: section_dir, snippet_dir: snippet_dir, headers: headers, **options)
+
+          # level_to_header = Torture.merge_toc(level_to_header, headers)
         end
 
         create_file(target_file: target_file, content: html_sections.join("\n"))
       end
 
-      def render_section(file_name:, section_dir:, headers:, snippet_dir:, snippet_file:, section_cell:)
+      def render_section(file_name:, section_dir:, headers:, snippet_dir:, snippet_file:, section_cell:, section_cell_options:)
         template_file = File.join(section_dir, file_name) # "test/cms/snippets/reform/intro.md.erb"
         template      = Cell::Erb::Template.new(template_file)
 
@@ -30,7 +33,8 @@ module Torture
 
           # for {code}
           root: snippet_dir,
-          file: snippet_file
+          file: snippet_file,
+          **section_cell_options
         )
 
         html = Torture::Cms::Section.({template: template, exec_context: section_cell})
