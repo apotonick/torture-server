@@ -12,7 +12,8 @@ module Torture
         def h2(title, name: title, level: 2, display_title: title, **)
           header, top_header = header_for(title, level)
 
-          header = %{<h#{level} id="#{header.id}">#{display_title}</h#{level}> <!-- {#{header.id}-toc} -->}
+          # header = %{<h#{level} id="#{header.id}">#{display_title}</h#{level}> <!-- {#{header.id}-toc} -->}
+          header = %{<h#{level} id="#{header.id}">#{display_title}</h#{level}>}
 
           render_header(header)
         end
@@ -44,9 +45,7 @@ module Torture
         end
 
         private def render_header(html)
-          %{<span class="divider"></span>
-
-      #{html}}
+          return html
         end
       end
     end

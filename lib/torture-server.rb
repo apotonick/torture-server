@@ -1,0 +1,1 @@
+require "torture/cms"

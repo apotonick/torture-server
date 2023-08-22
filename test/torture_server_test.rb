@@ -71,28 +71,28 @@ class TortureServerTest < Minitest::Spec
 )
 
     assert_equal File.open("test/site/2.1/docs/cells/5.0/index.html").read, %()
-    assert_equal File.open("test/site/2.1/docs/cells/index.html").read, %(<span class="divider"></span>
+    assert_equal File.open("test/site/2.1/docs/cells/index.html").read,
+%(<h2 id="cells-what-s-a-cell-">What's a cell?</h2>
 
-      <h2 id="cells-what-s-a-cell-">What's a cell?</h2> <!-- {cells-what-s-a-cell--toc} -->
+<p>Paragraph needs an a tag.</p>
+
+<ul>
+  <li>And</li>
+  <li>a</li>
+  <li>comprehensive list.</li>
+</ul>
 )
-    assert_equal File.open("test/site/2.1/docs/reform/index.html").read, %(<span class="divider"></span>
+    assert_equal File.open("test/site/2.1/docs/reform/index.html").read,
+%(<h2 id="reform-introduction">Introduction</h2>
 
-      <h2 id="reform-introduction">Introduction</h2> <!-- {reform-introduction-toc} -->
+<p>Deep stuff.</p>
 
-Deep stuff.
+<h3 id="reform-introduction-deep-profound">Deep &amp; profound</h3>
 
-<span class="divider"></span>
-
-      <h3 id="reform-introduction-deep-profound">Deep & profound</h3> <!-- {reform-introduction-deep-profound-toc} -->
-
-test
-
+<p>test</p>
 
 <pre><code>99.must_equal 99
 </code></pre>
-
-
-
 
 <pre><code>and profound
 </code></pre>

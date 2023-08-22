@@ -34,6 +34,8 @@ module Torture
         )
 
         html = Torture::Cms::Section.({template: template, exec_context: section_cell})
+
+        html = Kramdown::Document.new(html).to_html
       end
 
       def create_file(target_file:, content:)
