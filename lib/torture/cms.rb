@@ -12,3 +12,5 @@ require "torture/cms/helper/header"
 require "torture/cms/helper/code"
 
 require "torture/snippet"
+
+require "torture/cms/kramdown" # FIXME: Tailwind specific

@@ -1,9 +1,82 @@
 require "test_helper"
 
 class TortureServerTest < Minitest::Spec
-  it "what" do
-    FileUtils.rm_rf("test/site")
+  require "cell"
+  require "cells/__erb__"
 
+
+  require "torture/cms"
+
+  require "kramdown"
+
+  module My
+    module Cell
+      # This is delibarately a PORO, and not a cell, to play with the "exec_context" concept.
+      class Section # #Torture::Cms::Section
+        include Torture::Cms::Helper::Header # needs {headers}
+        include Torture::Cms::Helper::Code   # needs {extract}
+
+        def initialize(headers:, controller:, **options) # DISCUSS: how to define incoming dependencies?
+          @options = options.merge(headers: headers, controller: controller)
+        end
+      end
+    end
+  end
+
+  it "allows using different Kramdown implementation" do
+    class Kramdown::Parser::My < Kramdown::Parser::Kramdown
+      def new_block_el(*args)
+        type, bla, attr, rest = args
+
+        if type == :p
+          options = {class: "mt-6"}
+          return super(type, bla, options, rest)
+        end
+        super
+      end
+    end
+
+    pages = {
+      "reform" => {
+        title: "Reform",
+        "2.3" => {
+          snippet_dir: "test/code/reform",
+          section_dir: "test/sections/reform",
+          target_file: "test/site/2.1/docs/reform/index.html",
+          "intro.md.erb" => { snippet_file: "intro_test.rb" },
+          # "controller.md.erb" => { snippet_file: "intro_test.rb" }, # uses @options[:controller]
+        }
+      }
+    }
+
+    pages = pages.collect do |name, options| # TODO: extract me!
+      Torture::Cms::Site.new.render_versioned_pages(**options, section_cell: My::Cell::Section, section_cell_options: {controller: nil}, kramdown_options: {input: "my"})
+    end
+
+    #@ <p> has class!
+    assert_equal File.open("test/site/2.1/docs/reform/index.html").read,
+%(<h2 id="reform-introduction" class="">Introduction</h2>
+
+<p class="mt-6">Deep stuff.</p>
+
+<h3 id="reform-introduction-deep-profound" class="">Deep &amp; profound</h3>
+
+<p class="mt-6">test</p>
+
+<pre><code>99.must_equal 99
+</code></pre>
+
+<pre><code>and profound
+</code></pre>
+
+)
+  end
+
+  before do
+    FileUtils.rm_rf("test/site")
+  end
+
+  it "what" do
     pages = {
       "cells" => {
         title: "Cells",
@@ -31,27 +104,6 @@ class TortureServerTest < Minitest::Spec
       }
     }
 
-    require "cell"
-    require "cells/__erb__"
-
-
-    require "torture/cms"
-
-    require "kramdown"
-
-    module My
-      module Cell
-        # This is delibarately a PORO, and not a cell, to play with the "exec_context" concept.
-        class Section # #Torture::Cms::Section
-          include Torture::Cms::Helper::Header # needs {headers}
-          include Torture::Cms::Helper::Code   # needs {extract}
-
-          def initialize(headers:, controller:, **options) # DISCUSS: how to define incoming dependencies?
-            @options = options.merge(headers: headers, controller: controller)
-          end
-        end
-      end
-    end
 
     pages = pages.collect do |name, options| # TODO: extract me!
       Torture::Cms::Site.new.render_versioned_pages(**options, section_cell: My::Cell::Section, section_cell_options: {controller: Object})
@@ -73,7 +125,7 @@ class TortureServerTest < Minitest::Spec
 
     assert_equal File.open("test/site/2.1/docs/cells/5.0/index.html").read, %()
     assert_equal File.open("test/site/2.1/docs/cells/index.html").read,
-%(<h2 id="cells-what-s-a-cell-">What's a cell?</h2>
+%(<h2 id="cells-what-s-a-cell-" class="">What's a cell?</h2>
 
 <p>Paragraph needs an a tag.</p>
 
@@ -84,11 +136,11 @@ class TortureServerTest < Minitest::Spec
 </ul>
 )
     assert_equal File.open("test/site/2.1/docs/reform/index.html").read,
-%(<h2 id="reform-introduction">Introduction</h2>
+%(<h2 id="reform-introduction" class="">Introduction</h2>
 
 <p>Deep stuff.</p>
 
-<h3 id="reform-introduction-deep-profound">Deep &amp; profound</h3>
+<h3 id="reform-introduction-deep-profound" class="">Deep &amp; profound</h3>
 
 <p>test</p>
 
