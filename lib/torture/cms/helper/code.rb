@@ -13,7 +13,8 @@ module Torture
           end
 
           code = dont_extract ? code : extract(*args, **kws)
-          Kramdown::Document.new("\n\t#{code.gsub("\n", "\n\t")}").to_html
+          # Kramdown::Document.new("\n\t#{code.gsub("\n", "\n\t")}").to_html
+          %(<pre><code>#{code}</code></pre>)
         end
 
         # def extract(section, root:, file:, collapse: nil, unindent: true)

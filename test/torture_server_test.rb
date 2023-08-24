@@ -66,9 +66,8 @@ class TortureServerTest < Minitest::Spec
 <pre><code>99.must_equal 99
 </code></pre>
 
-<pre><code>and profound
-</code></pre>
-
+<pre><code>
+and profound</code></pre>
 )
   end
 
@@ -147,9 +146,8 @@ class TortureServerTest < Minitest::Spec
 <pre><code>99.must_equal 99
 </code></pre>
 
-<pre><code>and profound
-</code></pre>
-
+<pre><code>
+and profound</code></pre>
 
 <p>Object</p>
 )
