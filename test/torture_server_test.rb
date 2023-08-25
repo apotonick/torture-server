@@ -23,6 +23,48 @@ class TortureServerTest < Minitest::Spec
     end
   end
 
+  let(:reform_index) {
+    pages = {
+      "reform" => {
+        title: "Reform",
+        "2.3" => {
+          snippet_dir: "test/code/reform",
+          section_dir: "test/sections/reform",
+          target_file: "test/site/2.1/docs/reform/index.html",
+          "intro.md.erb" => { snippet_file: "intro_test.rb" },
+          # "controller.md.erb" => { snippet_file: "intro_test.rb" }, # uses @options[:controller]
+        }
+      }
+    }
+  }
+
+  it "accepts {pre} and {code} classes" do
+    pages = reform_index.collect do |name, options| # TODO: extract me!
+      Torture::Cms::Site.new.render_versioned_pages(**options, section_cell: My::Cell::Section, section_cell_options: {controller: nil,
+        pre_attributes: {class: "mt-4"},
+        code_attributes: {class: "rounded"},
+
+      })
+    end
+
+    #@ <p> has class!
+    assert_equal File.open("test/site/2.1/docs/reform/index.html").read,
+%(<h2 id="reform-introduction" class="">Introduction</h2>
+
+<p>Deep stuff.</p>
+
+<h3 id="reform-introduction-deep-profound" class="">Deep &amp; profound</h3>
+
+<p>test</p>
+
+<pre class="mt-4"><code class="rounded">99.must_equal 99
+</code></pre>
+
+<pre class="mt-4"><code class="rounded">
+and profound</code></pre>
+)
+  end
+
   it "allows using different Kramdown implementation" do
     class Kramdown::Parser::My < Kramdown::Parser::Kramdown
       def new_block_el(*args)
@@ -36,20 +78,9 @@ class TortureServerTest < Minitest::Spec
       end
     end
 
-    pages = {
-      "reform" => {
-        title: "Reform",
-        "2.3" => {
-          snippet_dir: "test/code/reform",
-          section_dir: "test/sections/reform",
-          target_file: "test/site/2.1/docs/reform/index.html",
-          "intro.md.erb" => { snippet_file: "intro_test.rb" },
-          # "controller.md.erb" => { snippet_file: "intro_test.rb" }, # uses @options[:controller]
-        }
-      }
-    }
 
-    pages = pages.collect do |name, options| # TODO: extract me!
+
+    pages = reform_index.collect do |name, options| # TODO: extract me!
       Torture::Cms::Site.new.render_versioned_pages(**options, section_cell: My::Cell::Section, section_cell_options: {controller: nil}, kramdown_options: {input: "my"})
     end
 

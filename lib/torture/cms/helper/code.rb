@@ -14,7 +14,7 @@ module Torture
 
           code = dont_extract ? code : extract(*args, **kws)
           # Kramdown::Document.new("\n\t#{code.gsub("\n", "\n\t")}").to_html
-          %(<pre><code>#{code}</code></pre>)
+          %(<pre #{html_attributes(@options[:pre_attributes])}><code #{html_attributes(@options[:code_attributes])}>#{code}</code></pre>)
         end
 
         # def extract(section, root:, file:, collapse: nil, unindent: true)
@@ -29,6 +29,12 @@ module Torture
         private def extract_from(root:, file:, section: nil, collapse:, unindent:, sub: nil, **) # FIXME: when using {code ruby do...end} all those options don't make sense.
           # Torture::Snippet from the {torture} gem.
           Torture::Snippet.extract_from(file: File.join(root, file), marker: section, collapse: collapse, unindent: unindent, sub: sub)
+        end
+
+        private def html_attributes(options)
+          return if options.nil?
+
+          options.collect { |k,v| %(#{k}="#{v}") }.join(" ")
         end
       end
     end
