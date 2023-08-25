@@ -55,7 +55,7 @@ class TortureServerTest < Minitest::Spec
 
 <h3 id="reform-introduction-deep-profound" class="">Deep &amp; profound</h3>
 
-<p>test</p>
+<p>test with <code>code span</code>.</p>
 
 <pre class="mt-4"><code class="rounded">99.must_equal 99
 </code></pre>
@@ -66,22 +66,21 @@ and profound</code></pre>
   end
 
   it "allows using different Kramdown implementation" do
-    class Kramdown::Parser::My < Kramdown::Parser::Kramdown
-      def new_block_el(*args)
-        type, bla, attr, rest = args
+    class Kramdown::Converter::Fuckyoukramdown < Kramdown::Converter::Html
+      def convert_p(el, *args)
+        el.attr[:class] = "mt-6"
+        super
+      end
 
-        if type == :p
-          options = {class: "mt-6"}
-          return super(type, bla, options, rest)
-        end
+      def convert_codespan(el, *args)
+        el.attr[:class] = "purple"
         super
       end
     end
 
 
-
     pages = reform_index.collect do |name, options| # TODO: extract me!
-      Torture::Cms::Site.new.render_versioned_pages(**options, section_cell: My::Cell::Section, section_cell_options: {controller: nil}, kramdown_options: {input: "my"})
+      Torture::Cms::Site.new.render_versioned_pages(**options, section_cell: My::Cell::Section, section_cell_options: {controller: nil}, kramdown_options: {converter: "to_fuckyoukramdown"})
     end
 
     #@ <p> has class!
@@ -92,7 +91,7 @@ and profound</code></pre>
 
 <h3 id="reform-introduction-deep-profound" class="">Deep &amp; profound</h3>
 
-<p class="mt-6">test</p>
+<p class="mt-6">test with <code class="purple">code span</code>.</p>
 
 <pre><code>99.must_equal 99
 </code></pre>
@@ -172,7 +171,7 @@ and profound</code></pre>
 
 <h3 id="reform-introduction-deep-profound" class="">Deep &amp; profound</h3>
 
-<p>test</p>
+<p>test with <code>code span</code>.</p>
 
 <pre><code>99.must_equal 99
 </code></pre>
