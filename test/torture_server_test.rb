@@ -19,6 +19,10 @@ class TortureServerTest < Minitest::Spec
         def initialize(headers:, controller:, **options) # DISCUSS: how to define incoming dependencies?
           @options = options.merge(headers: headers, controller: controller)
         end
+
+        def to_h
+          {headers: @options[:headers]}
+        end
       end
     end
   end
@@ -62,6 +66,38 @@ class TortureServerTest < Minitest::Spec
 
 <pre class="mt-4"><code class="rounded">
 and profound</code></pre>
+)
+  end
+
+  it "accepts {:layout_cell}" do
+    layout = Class.new do
+
+    end
+
+    pages = reform_index.collect do |name, options| # TODO: extract me!
+      Torture::Cms::Site.new.render_versioned_pages(**options, section_cell: My::Cell::Section, section_cell_options: {controller: nil},
+        layout: {cell: layout, template: Cell::Erb::Template.new("test/cms/layouts/documentation.erb")}, # DISCUSS: with .md, too?
+      )
+    end
+
+    #@ <p> has class!
+    assert_equal File.open("test/site/2.1/docs/reform/index.html").read,
+%(Layout.
+<h2 id="reform-introduction" class="">Introduction</h2>
+
+<p>Deep stuff.</p>
+
+<h3 id="reform-introduction-deep-profound" class="">Deep &amp; profound</h3>
+
+<p>test with <code>code span</code>.</p>
+
+<pre><code>99.must_equal 99
+</code></pre>
+
+<pre><code>
+and profound</code></pre>
+
+done.
 )
   end
 
