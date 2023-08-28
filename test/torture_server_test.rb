@@ -47,12 +47,14 @@ class TortureServerTest < Minitest::Spec
       Torture::Cms::Site.new.render_versioned_pages(**options, section_cell: My::Cell::Section, section_cell_options: {controller: nil,
         pre_attributes: {class: "mt-4"},
         code_attributes: {class: "rounded"},
-
       })
     end
 
+    assert_equal pages[0].to_h["2.3"][:target_file], "test/site/2.1/docs/reform/index.html"
+    content = pages[0].to_h["2.3"][:content]
+
     #@ <p> has class!
-    assert_equal File.open("test/site/2.1/docs/reform/index.html").read,
+    assert_equal content,
 %(<h2 id="reform-introduction" class="">Introduction</h2>
 
 <p>Deep stuff.</p>
@@ -80,8 +82,11 @@ and profound</code></pre>
       )
     end
 
+    assert_equal pages[0].to_h["2.3"][:target_file], "test/site/2.1/docs/reform/index.html"
+    content = pages[0].to_h["2.3"][:content]
+
     #@ <p> has class!
-    assert_equal File.open("test/site/2.1/docs/reform/index.html").read,
+    assert_equal content,
 %(Layout.
 <h2 id="reform-introduction" class="">Introduction</h2>
 
@@ -119,8 +124,11 @@ done.
       Torture::Cms::Site.new.render_versioned_pages(**options, section_cell: My::Cell::Section, section_cell_options: {controller: nil}, kramdown_options: {converter: "to_fuckyoukramdown"})
     end
 
+    assert_equal pages[0].to_h["2.3"][:target_file], "test/site/2.1/docs/reform/index.html"
+    content = pages[0].to_h["2.3"][:content]
+
     #@ <p> has class!
-    assert_equal File.open("test/site/2.1/docs/reform/index.html").read,
+    assert_equal content,
 %(<h2 id="reform-introduction" class="">Introduction</h2>
 
 <p class="mt-6">Deep stuff.</p>
@@ -171,7 +179,7 @@ and profound</code></pre>
 
 
     pages = pages.collect do |name, options| # TODO: extract me!
-      Torture::Cms::Site.new.render_versioned_pages(**options, section_cell: My::Cell::Section, section_cell_options: {controller: Object})
+      Torture::Cms::Site.new.produce_versioned_pages(**options, section_cell: My::Cell::Section, section_cell_options: {controller: Object})
     end
 # pp pages
 

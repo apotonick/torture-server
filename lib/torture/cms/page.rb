@@ -1,7 +1,3 @@
-require "fileutils"
-
-
-
 module Torture
   module Cms
 
@@ -36,7 +32,10 @@ module Torture
           sections_html = result.to_s
         end
 
-        create_file(target_file: target_file, content: sections_html)
+        {
+          target_file: target_file,
+          content: sections_html
+        }
       end
 
       def render_section(file_name:, section_dir:, headers:, snippet_dir:, snippet_file:, section_cell:, section_cell_options:, kramdown_options:)
@@ -63,13 +62,6 @@ module Torture
         html = Kramdown::Document.new(html, kramdown_options).send(convert_method)
 
         return html, result
-      end
-
-      def create_file(target_file:, content:)
-        dir = File.dirname(target_file)
-        FileUtils.mkdir_p(dir) # TODO: test that properly.
-
-        File.open(target_file, "w") { |file| file.write(content) }
       end
     end
   end
