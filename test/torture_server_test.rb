@@ -97,6 +97,7 @@ and profound</code></pre>
     end
 
     left_toc_template = Cell::Erb::Template.new("test/cms/layouts/left_toc.erb")
+    layout_options = {cell: layout, template: layout_template, left_toc: {cell: left_toc, template: left_toc_template}} # DISCUSS: with .md, too?
 
     pages = {
       "reform" => {
@@ -106,7 +107,7 @@ and profound</code></pre>
           section_dir: "test/sections/reform",
           target_file: "test/site/2.1/docs/reform/index.html",
           target_url:  "/2.1/docs/reform",
-          layout:      {cell: layout, template: layout_template, left_toc: {cell: left_toc, template: left_toc_template}}, # DISCUSS: with .md, too?
+          layout:      layout_options,
           "intro.md.erb" => { snippet_file: "intro_test.rb" },
           "api.md.erb" => { snippet_file: "intro_test.rb" },
           # "controller.md.erb" => { snippet_file: "intro_test.rb" }, # uses @options[:controller]
@@ -119,6 +120,7 @@ and profound</code></pre>
           section_dir: "test/sections/cells/4.0",
           target_file: "test/site/2.1/docs/cells/index.html",
           target_url:  "/2.1/docs/cells",
+          layout:       layout_options,
           "overview.md.erb" => { snippet_file: "cell_test.rb" }
         },
         "5.0" => {
@@ -137,10 +139,10 @@ and profound</code></pre>
 
     assert_equal pages[0].to_h["2.3"][:target_file], "test/site/2.1/docs/reform/index.html"
 
-    content = pages[0].to_h["2.3"][:content]
+    reform_content = pages[0].to_h["2.3"][:content]
 
     #@ <p> has class!
-    assert_equal content,
+    assert_equal reform_content,
 %(Layout.
 
   <div>
@@ -171,6 +173,34 @@ and profound</code></pre>
 <h2 id=\"reform-api\" class=\"\">API</h2>
 
 <p>Too complex in 2.x.</p>
+
+done.
+)
+
+    cell_content = pages[1].to_h["4.0"][:content]
+
+    assert_equal cell_content,
+%(Layout.
+
+  <div>
+    <b><a href="/2.1/docs/reform">reform</a></b>
+  </div>
+
+  <div>
+    <b><a href="/2.1/docs/cells">cells</a></b>
+      <a href=""></a>
+  </div>
+
+
+<h2 id="cells-what-s-a-cell-" class="">What's a cell?</h2>
+
+<p>Paragraph needs an a tag.</p>
+
+<ul>
+  <li>And</li>
+  <li>a</li>
+  <li>comprehensive list.</li>
+</ul>
 
 done.
 )

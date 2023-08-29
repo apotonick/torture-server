@@ -37,8 +37,6 @@ module Torture
               if layout.is_a?(Hash) # FIXME: only add when needed.
                 level_1_headers = Helper::Toc::Versioned.collapsable(headers, expanded: book)
 
-                pp level_1_headers
-
                 left_toc_options = layout[:left_toc]
                 left_toc_cell = left_toc_options[:cell].new(headers: level_1_headers, current_page: nil)
 
