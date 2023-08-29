@@ -29,6 +29,7 @@ class TortureServerTest < Minitest::Spec
           snippet_dir: "test/code/reform",
           section_dir: "test/sections/reform",
           target_file: "test/site/2.1/docs/reform/index.html",
+          target_url:  "/2.1/reform",
           "intro.md.erb" => { snippet_file: "intro_test.rb" },
           # "controller.md.erb" => { snippet_file: "intro_test.rb" }, # uses @options[:controller]
         }
@@ -37,12 +38,12 @@ class TortureServerTest < Minitest::Spec
   }
 
   it "accepts {pre} and {code} classes" do
-    pages = reform_index.collect do |name, options| # TODO: extract me!
-      Torture::Cms::Site.new.render_versioned_pages(**options, section_cell: My::Cell::Section, section_cell_options: {controller: nil,
-        pre_attributes: {class: "mt-4"},
-        code_attributes: {class: "rounded"},
-      })
-    end
+    pages = Torture::Cms::DSL.(reform_index)
+
+    pages = Torture::Cms::Site.new.render_pages(pages, section_cell: My::Cell::Section, section_cell_options: {controller: nil,
+      pre_attributes: {class: "mt-4"},
+      code_attributes: {class: "rounded"},
+    })
     assert_equal pages[0].to_h["2.3"][:target_file], "test/site/2.1/docs/reform/index.html"
     content = pages[0].to_h["2.3"][:content]
 
@@ -219,10 +220,9 @@ done.
       end
     end
 
+    pages = Torture::Cms::DSL.(reform_index)
 
-    pages = reform_index.collect do |name, options| # TODO: extract me!
-      Torture::Cms::Site.new.render_versioned_pages(**options, section_cell: My::Cell::Section, section_cell_options: {controller: nil}, kramdown_options: {converter: "to_fuckyoukramdown"})
-    end
+    pages = Torture::Cms::Site.new.render_pages(pages, section_cell: My::Cell::Section, section_cell_options: {controller: nil}, kramdown_options: {converter: "to_fuckyoukramdown"})
 
     assert_equal pages[0].to_h["2.3"][:target_file], "test/site/2.1/docs/reform/index.html"
     content = pages[0].to_h["2.3"][:content]
@@ -257,12 +257,14 @@ and profound</code></pre>
           snippet_dir: "test/cells/",
           section_dir: "test/sections/cells/4.0",
           target_file: "test/site/2.1/docs/cells/index.html",
+          target_url:  "/2.1/cells",
           "overview.md.erb" => { snippet_file: "cell_test.rb" }
         },
         "5.0" => {
           snippet_dir: "test/cells-5/",
           section_dir: "test/sections/cells/5.0",
           target_file: "test/site/2.1/docs/cells/5.0/index.html",
+          target_url:  "/2.1/cells/5.0",
         }
       },
       "reform" => {
@@ -271,17 +273,16 @@ and profound</code></pre>
           snippet_dir: "test/code/reform",
           section_dir: "test/sections/reform",
           target_file: "test/site/2.1/docs/reform/index.html",
+          target_url:  "/2.1/reform",
           "intro.md.erb" => { snippet_file: "intro_test.rb" },
           "controller.md.erb" => { snippet_file: "intro_test.rb" }, # uses @options[:controller]
         }
       }
     }
 
+    pages = Torture::Cms::DSL.(pages)
 
-    pages = pages.collect do |name, options| # TODO: extract me!
-      Torture::Cms::Site.new.produce_versioned_pages(**options, section_cell: My::Cell::Section, section_cell_options: {controller: Object})
-    end
-# pp pages
+    pages = Torture::Cms::Site.new.produce_versioned_pages(**pages, section_cell: My::Cell::Section, section_cell_options: {controller: Object})
 
     assert_equal `tree test/site`, %(test/site
 └── 2.1
