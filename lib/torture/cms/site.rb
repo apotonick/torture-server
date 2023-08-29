@@ -5,26 +5,27 @@ module Torture
     class Site
       def render_pages(pages, **site_options)
 
-        pages = pages.collect do |name, versions| # TODO: extract me!
+        pages = pages.collect do |name, book_options|
           [
             name,
-            render_versioned_pages(**site_options, versions: versions, title: name)
+            render_versioned_book(**site_options, name: name, **book_options)
           ]
         end.to_h
-
 
       # TODO: additional step
       #       headers
         headers =
-          pages.collect do |book, versions|
+          pages.collect do |name, versions|
             versions =
               versions.collect do |version, options|
-                h1 = options[:headers][1] || raise
+                h1 = options[:headers][1][0] || raise
+                h1 = h1.dup
+                h1.title = options[:toc_title] # set the "sidebar title" on this header.
 
-                [version, h1]
+                [version, [h1]]
               end.to_h
 
-            [book, versions]
+            [name, versions]
           end
 
       # TODO: additional step
@@ -56,7 +57,7 @@ module Torture
           end
       end
 
-      def render_versioned_pages(versions:, **site_options)
+      def render_versioned_book(versions:, **site_options)
         versions.collect do |version, version_options|
           result = render_page(**site_options, sections: version_options[:sections], **version_options[:options])
 
@@ -68,7 +69,7 @@ module Torture
       end
 
       def produce_versioned_pages(**options)
-        pages = render_versioned_pages(**options)
+        pages = render_versioned_book(**options)
 
         pages.collect do |version, page_options|
           produce_page(**page_options)

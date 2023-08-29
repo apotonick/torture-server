@@ -20,7 +20,10 @@ module Torture
 
           [
             book,
-            versions
+            {
+              **book_options,
+              versions: versions,
+            }
           ]
         end.to_h
       end

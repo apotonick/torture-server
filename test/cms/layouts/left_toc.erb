@@ -1,6 +1,6 @@
 <% @options[:headers].each do |header| %>
   <div>
     <b><a href="<%= header.options[:target] %>"><%= header.title %></a></b><% header.items.each do |h2| %>
-      <a href=""></a><% end %>
+      <a href="<%= h2.options[:target] %>"><%= h2.title %></a><% end %>
   </div>
 <% end %>

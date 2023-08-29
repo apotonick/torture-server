@@ -102,8 +102,9 @@ and profound</code></pre>
 
     pages = {
       "reform" => {
-        title: "Reform",
+        toc_title: "Reform",
         "2.3" => {
+          title: "Reform",
           snippet_dir: "test/code/reform",
           section_dir: "test/sections/reform",
           target_file: "test/site/2.1/docs/reform/index.html",
@@ -115,8 +116,9 @@ and profound</code></pre>
         }
       },
       "cells" => {
-        title: "Cells",
+        toc_title: "Cells",
         "4.0" => { # "prefix/version"
+          title: "Cells 4",
           snippet_dir: "test/cells/",
           section_dir: "test/sections/cells/4.0",
           target_file: "test/site/2.1/docs/cells/index.html",
@@ -125,6 +127,7 @@ and profound</code></pre>
           "overview.md.erb" => { snippet_file: "cell_test.rb" }
         },
         "5.0" => {
+          title: "Cells 5",
           snippet_dir: "test/cells-5/",
           section_dir: "test/sections/cells/5.0",
           target_file: "test/site/2.1/docs/cells/5.0/index.html",
@@ -147,13 +150,13 @@ and profound</code></pre>
 %(Layout.
 
   <div>
-    <b><a href="/2.1/docs/reform">reform</a></b>
-      <a href=""></a>
-      <a href=""></a>
+    <b><a href="/2.1/docs/reform">Reform</a></b>
+      <a href="">Introduction</a>
+      <a href="">API</a>
   </div>
 
   <div>
-    <b><a href="/2.1/docs/cells">cells</a></b>
+    <b><a href="/2.1/docs/cells">Cells</a></b>
   </div>
 
 
@@ -184,16 +187,16 @@ done.
 %(Layout.
 
   <div>
-    <b><a href="/2.1/docs/reform">reform</a></b>
+    <b><a href="/2.1/docs/reform">Reform</a></b>
   </div>
 
   <div>
-    <b><a href="/2.1/docs/cells">cells</a></b>
-      <a href=""></a>
+    <b><a href="/2.1/docs/cells">Cells</a></b>
+      <a href="">What's a cell?</a>
   </div>
 
 
-<h2 id="cells-what-s-a-cell-" class="">What's a cell?</h2>
+<h2 id="cells-4-what-s-a-cell-" class="">What's a cell?</h2>
 
 <p>Paragraph needs an a tag.</p>
 
