@@ -111,7 +111,11 @@ and profound</code></pre>
           target_url:  "/2.1/docs/reform",
           layout:      layout_options,
           "intro.md.erb" => { snippet_file: "intro_test.rb" },
-          "api.md.erb" => { snippet_file: "intro_test.rb" },
+          "api.md.erb" => {
+            snippet_file: "api_test.rb",
+            snippet_dir: "test/code/reform/api", # local and different {:snippet_dir}.
+          },
+          "reform.md.erb" => {section_dir: "test/sections/generic", snippet_file: "reform_test.rb", snippet_dir: "test/code/generic"},
           # "controller.md.erb" => { snippet_file: "intro_test.rb" }, # uses @options[:controller]
         }
       },
@@ -177,6 +181,12 @@ and profound</code></pre>
 <h2 id=\"reform-api\" class=\"\">API</h2>
 
 <p>Too complex in 2.x.</p>
+
+<pre><code>Constant
+</code></pre>
+
+<pre><code>Module
+</code></pre>
 
 done.
 )
