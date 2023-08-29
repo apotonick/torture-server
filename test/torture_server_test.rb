@@ -105,6 +105,7 @@ and profound</code></pre>
           snippet_dir: "test/code/reform",
           section_dir: "test/sections/reform",
           target_file: "test/site/2.1/docs/reform/index.html",
+          target_url:  "/2.1/docs/reform",
           layout:      {cell: layout, template: layout_template, left_toc: {cell: left_toc, template: left_toc_template}}, # DISCUSS: with .md, too?
           "intro.md.erb" => { snippet_file: "intro_test.rb" },
           "api.md.erb" => { snippet_file: "intro_test.rb" },
@@ -117,12 +118,14 @@ and profound</code></pre>
           snippet_dir: "test/cells/",
           section_dir: "test/sections/cells/4.0",
           target_file: "test/site/2.1/docs/cells/index.html",
+          target_url:  "/2.1/docs/cells",
           "overview.md.erb" => { snippet_file: "cell_test.rb" }
         },
         "5.0" => {
           snippet_dir: "test/cells-5/",
           section_dir: "test/sections/cells/5.0",
           target_file: "test/site/2.1/docs/cells/5.0/index.html",
+          target_url:  "/2.1/docs/cells/5.0",
         }
       },
     }
@@ -139,6 +142,18 @@ and profound</code></pre>
     #@ <p> has class!
     assert_equal content,
 %(Layout.
+
+  <div>
+    <b><a href="/2.1/docs/reform">reform</a></b>
+      <a href=""></a>
+      <a href=""></a>
+  </div>
+
+  <div>
+    <b><a href="/2.1/docs/cells">cells</a></b>
+  </div>
+
+
 <h2 id="reform-introduction" class="">Introduction</h2>
 
 <p>Deep stuff.</p>

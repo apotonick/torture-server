@@ -3,11 +3,10 @@ module Torture
 
     class Page
 
-      def render_page(title:, sections:, **options)
-        page_header = Torture::Toc.Header(title, 1, {id: nil}) # FIXME: remove mutability.
-        headers     = {1 => [page_header], 2 => [], 3 => [], 4 => [], 5 => []} # mutable state, hmm.
+      def render_page(title:, sections:, target_url:, **options)
+        page_header = Torture::Toc.Header(title, 1, {id: nil}, target: target_url) # FIXME: remove mutability.
 
-        # TODO: version "slug"
+        headers     = {1 => [page_header], 2 => [], 3 => [], 4 => [], 5 => []} # mutable state, hmm.
 
         ["<h1>#{title}</h1>\n"] + # FIXME
 
@@ -15,9 +14,6 @@ module Torture
         html_sections = sections.collect do |file_name, section_options|
           html, result = render_section(**options, **section_options, file_name: file_name, headers: headers)
 
-# TODO: additional step
-# puts "@@@@@ #{result.to_h[:headers].inspect}"
-#           level_to_header = Torture.merge_toc(level_to_header, result.to_h[:headers]) # FIXME: this should be optional!
           headers = result.to_h[:headers] # TODO: additional step!
 
           html

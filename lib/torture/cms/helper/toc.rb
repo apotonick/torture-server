@@ -25,7 +25,7 @@ module Torture
                 h1
               else
 
-                Torture::Toc::Header.new(h1.title, h1.level, h1.id, [])
+                Torture::Toc::Header.new(h1.title, h1.level, h1.id, [], h1.options)
               end
             end
           end

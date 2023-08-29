@@ -1,13 +1,4 @@
-
 module Torture
-  def self.merge_toc(a, b)
-    Hash[
-      b.collect do |k, ary|
-        ary += a[k] || []
-        [k, ary]
-      end
-    ]
-  end
 
     module Toc
     Header = Struct.new(:title, :level, :id, :items, :options)
