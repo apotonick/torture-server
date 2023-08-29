@@ -69,8 +69,11 @@ and profound</code></pre>
     layout = Class.new do
       include Torture::Cms::Helper::Toc
 
-      def initialize(left_toc_html:)
-        @options = {left_toc_html: left_toc_html}
+      def initialize(left_toc_html:, version_options:)
+        @options = {
+          left_toc_html: left_toc_html,
+          documentation_title: version_options[:title], # the local page version's {:title}
+        }
       end
 
       def to_h
@@ -79,6 +82,10 @@ and profound</code></pre>
 
       def toc_left
         @options[:left_toc_html]
+      end
+
+      def documentation_title
+        @options[:documentation_title]
       end
     end
 
@@ -152,6 +159,7 @@ and profound</code></pre>
     #@ <p> has class!
     assert_equal reform_content,
 %(Layout.
+<h1>Reform documentation</h1>
 
   <div>
     <b><a href="/2.1/docs/reform">Reform</a></b>
@@ -195,6 +203,7 @@ done.
 
     assert_equal cell_content,
 %(Layout.
+<h1>Cells 4 documentation</h1>
 
   <div>
     <b><a href="/2.1/docs/reform">Reform</a></b>

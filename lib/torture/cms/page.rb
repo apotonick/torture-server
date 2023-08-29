@@ -23,6 +23,7 @@ module Torture
         sections_html = html_sections.join("\n")
 
         options.merge(
+          title: title,
           content:      sections_html,
           headers:      headers,
         )

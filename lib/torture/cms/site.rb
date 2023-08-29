@@ -43,7 +43,7 @@ module Torture
 
                 left_toc_html = ::Cell.({template: left_toc_options[:template], exec_context: left_toc_cell})
 
-                layout_cell_instance = layout[:cell].new(left_toc_html: left_toc_html)
+                layout_cell_instance = layout[:cell].new(left_toc_html: left_toc_html, version_options: options) # DISCUSS: what options to hand in here?
 
                 sections_html = options[:content]
 
