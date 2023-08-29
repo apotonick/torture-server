@@ -1,12 +1,6 @@
 require "test_helper"
 
 class TortureServerTest < Minitest::Spec
-  require "cell"
-  require "cells/__erb__"
-
-
-  require "torture/cms"
-
   require "kramdown"
 
   module My
@@ -49,7 +43,6 @@ class TortureServerTest < Minitest::Spec
         code_attributes: {class: "rounded"},
       })
     end
-
     assert_equal pages[0].to_h["2.3"][:target_file], "test/site/2.1/docs/reform/index.html"
     content = pages[0].to_h["2.3"][:content]
 
@@ -73,16 +66,74 @@ and profound</code></pre>
 
   it "accepts {:layout_cell}" do
     layout = Class.new do
+      include Torture::Cms::Helper::Toc
 
+      def initialize(left_toc_html:)
+        @options = {left_toc_html: left_toc_html}
+      end
+
+      def to_h
+        {}
+      end
+
+      def toc_left
+        @options[:left_toc_html]
+      end
     end
 
-    pages = reform_index.collect do |name, options| # TODO: extract me!
-      Torture::Cms::Site.new.render_versioned_pages(**options, section_cell: My::Cell::Section, section_cell_options: {controller: nil},
-        layout: {cell: layout, template: Cell::Erb::Template.new("test/cms/layouts/documentation.erb")}, # DISCUSS: with .md, too?
-      )
+    layout_template = Cell::Erb::Template.new("test/cms/layouts/documentation.erb")
+
+    left_toc = Class.new do
+      def initialize(headers:, current_page:)
+        @options = {
+          headers: headers,
+          current_page: current_page
+        }
+      end
+
+      def to_h
+        {}
+      end
     end
+
+    left_toc_template = Cell::Erb::Template.new("test/cms/layouts/left_toc.erb")
+
+    pages = {
+      "reform" => {
+        title: "Reform",
+        "2.3" => {
+          snippet_dir: "test/code/reform",
+          section_dir: "test/sections/reform",
+          target_file: "test/site/2.1/docs/reform/index.html",
+          layout:      {cell: layout, template: layout_template, left_toc: {cell: left_toc, template: left_toc_template}}, # DISCUSS: with .md, too?
+          "intro.md.erb" => { snippet_file: "intro_test.rb" },
+          "api.md.erb" => { snippet_file: "intro_test.rb" },
+          # "controller.md.erb" => { snippet_file: "intro_test.rb" }, # uses @options[:controller]
+        }
+      },
+      "cells" => {
+        title: "Cells",
+        "4.0" => { # "prefix/version"
+          snippet_dir: "test/cells/",
+          section_dir: "test/sections/cells/4.0",
+          target_file: "test/site/2.1/docs/cells/index.html",
+          "overview.md.erb" => { snippet_file: "cell_test.rb" }
+        },
+        "5.0" => {
+          snippet_dir: "test/cells-5/",
+          section_dir: "test/sections/cells/5.0",
+          target_file: "test/site/2.1/docs/cells/5.0/index.html",
+        }
+      },
+    }
+
+
+    books = Torture::Cms::DSL.(pages)
+
+    pages = Torture::Cms::Site.new.render_pages(books, section_cell: My::Cell::Section, section_cell_options: {controller: nil})
 
     assert_equal pages[0].to_h["2.3"][:target_file], "test/site/2.1/docs/reform/index.html"
+
     content = pages[0].to_h["2.3"][:content]
 
     #@ <p> has class!
@@ -101,6 +152,10 @@ and profound</code></pre>
 
 <pre><code>
 and profound</code></pre>
+
+<h2 id=\"reform-api\" class=\"\">API</h2>
+
+<p>Too complex in 2.x.</p>
 
 done.
 )

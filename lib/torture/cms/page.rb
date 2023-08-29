@@ -3,42 +3,35 @@ module Torture
 
     class Page
 
-      def render_page(title:, section_cell:, section_cell_options:, section_dir:, snippet_dir:, target_file:, kramdown_options:, layout: {}, **sections)
+      def render_page(title:, sections:, **options)
         page_header = Torture::Toc.Header(title, 1, {id: nil}) # FIXME: remove mutability.
         headers     = {1 => [page_header], 2 => [], 3 => [], 4 => [], 5 => []} # mutable state, hmm.
 
-
-        level_to_header = {}
         # TODO: version "slug"
 
         ["<h1>#{title}</h1>\n"] + # FIXME
 
         # generate section
-        html_sections = sections.collect do |file_name, options|
-          html, result = render_section(section_cell: section_cell, section_cell_options: section_cell_options, file_name: file_name, section_dir: section_dir, snippet_dir: snippet_dir, headers: headers,
-            kramdown_options: kramdown_options, **options)
+        html_sections = sections.collect do |file_name, section_options|
+          html, result = render_section(**options, **section_options, file_name: file_name, headers: headers)
 
 # TODO: additional step
-          level_to_header = Torture.merge_toc(level_to_header, result.to_h[:headers]) # FIXME: this should be optional!
-# TODO: additional step
+# puts "@@@@@ #{result.to_h[:headers].inspect}"
+#           level_to_header = Torture.merge_toc(level_to_header, result.to_h[:headers]) # FIXME: this should be optional!
+          headers = result.to_h[:headers] # TODO: additional step!
 
           html
         end
 
         sections_html = html_sections.join("\n")
 
-        if layout.any? # FIXME: only add when needed.
-          result = ::Cell.({template: layout[:template]}) { sections_html }
-          sections_html = result.to_s
-        end
-
-        {
-          target_file: target_file,
-          content: sections_html
-        }
+        options.merge(
+          content:      sections_html,
+          headers:      headers,
+        )
       end
 
-      def render_section(file_name:, section_dir:, headers:, snippet_dir:, snippet_file:, section_cell:, section_cell_options:, kramdown_options:)
+      def render_section(file_name:, section_dir:, headers:, snippet_dir:, snippet_file:, section_cell:, section_cell_options:, kramdown_options: {}, **)
         template_file = File.join(section_dir, file_name) # "test/cms/snippets/reform/intro.md.erb"
         template      = Cell::Erb::Template.new(template_file)
 

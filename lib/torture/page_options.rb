@@ -1,5 +1,5 @@
 module Torture
-  module Page
+  module Page # FIXME: delete!
     class HTML < Cell::ViewModel
       include Cell::Erb
       # include Cell::Layout::External
