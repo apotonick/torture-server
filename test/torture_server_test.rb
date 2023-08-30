@@ -304,7 +304,7 @@ and profound</code></pre>
 
     pages = Torture::Cms::DSL.(pages)
 
-    pages = Torture::Cms::Site.new.produce_versioned_pages(**pages, section_cell: My::Cell::Section, section_cell_options: {controller: Object})
+    pages = Torture::Cms::Site.new.produce_versioned_pages(pages, section_cell: My::Cell::Section, section_cell_options: {controller: Object})
 
     assert_equal `tree test/site`, %(test/site
 └── 2.1

@@ -68,11 +68,13 @@ module Torture
         end.to_h
       end
 
-      def produce_versioned_pages(**options)
-        pages = render_versioned_book(**options)
+      def produce_versioned_pages(pages, **options)
+        pages = render_pages(pages, **options)
 
-        pages.collect do |version, page_options|
-          produce_page(**page_options)
+        pages.collect do |versions|
+          versions.collect do |version, _options|
+            produce_page(**_options)
+          end
         end
       end
 
