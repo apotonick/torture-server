@@ -92,11 +92,8 @@ and profound</code></pre>
     layout_template = Cell::Erb::Template.new("test/cms/layouts/documentation.erb")
 
     left_toc = Class.new do
-      def initialize(headers:, current_page:)
-        @options = {
-          headers: headers,
-          current_page: current_page
-        }
+      def initialize(headers:)
+        @options = {headers: headers}
       end
 
       def to_h

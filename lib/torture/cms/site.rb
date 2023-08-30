@@ -36,10 +36,10 @@ module Torture
               layout = options[:layout]
 
               if layout.is_a?(Hash) # FIXME: only add when needed.
-                level_1_headers = Helper::Toc::Versioned.collapsable(headers, expanded: book)
+                level_1_headers = Helper::Toc::Versioned.collapsable(headers, expanded: book) # "view model" for {toc_left}.
 
                 left_toc_options = layout[:left_toc]
-                left_toc_cell = left_toc_options[:cell].new(headers: level_1_headers, current_page: nil)
+                left_toc_cell = left_toc_options[:cell].new(headers: level_1_headers)
 
                 left_toc_html = ::Cell.({template: left_toc_options[:template], exec_context: left_toc_cell})
 
