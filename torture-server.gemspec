@@ -27,6 +27,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "minitest-line"
 
   spec.add_dependency "kramdown"
+  spec.add_dependency "trailblazer-activity-dsl-linear"
   # spec.add_dependency "cells"
   # spec.add_dependency "cells-erb"
 end
