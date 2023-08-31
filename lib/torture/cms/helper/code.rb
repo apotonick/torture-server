@@ -14,7 +14,10 @@ module Torture
 
           code = dont_extract ? code : extract(*args, **kws)
           # Kramdown::Document.new("\n\t#{code.gsub("\n", "\n\t")}").to_html
-          %(<pre #{html_attributes(@options[:pre_attributes])}><code #{html_attributes(@options[:code_attributes])}>#{code}</code></pre>)
+
+          escaped_code = code.gsub("<", "&lt;").gsub(">", "&gt;") # this is sometimes not done properly in the "final" Kramdown run on section level.
+
+          %(<pre #{html_attributes(@options[:pre_attributes])}><code #{html_attributes(@options[:code_attributes])}>#{escaped_code}</code></pre>)
         end
 
         # def extract(section, root:, file:, collapse: nil, unindent: true)

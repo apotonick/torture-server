@@ -12,11 +12,10 @@ class ReformTest < Minitest::Spec
 
     false.must_equal false
 
+    # Here, we test proper escaping of HTML entities such as < and >
     #:deep
-    assert 99 >= 99
+    assert 99 >= 99 # model=>#<Song name="nil">
     #:deep end
 
   end
-
-
 end
