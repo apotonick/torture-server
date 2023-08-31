@@ -2,7 +2,6 @@ module Torture
   module Cms
 
     class Page
-
       def render_page(title:, sections:, target_url:, **options)
         # NOTE: this is the real local version title, not the {:toc_title}.
         page_header = Torture::Toc.Header(title, 1, {id: nil}, target: target_url) # FIXME: remove mutability.
@@ -53,6 +52,31 @@ module Torture
         html = Kramdown::Document.new(html, kramdown_options).send(convert_method)
 
         return html, result
+      end
+
+      def self.left_toc(ctx, layout:, level_1_headers:, **)
+        left_toc_options = layout[:left_toc]
+        left_toc_cell = left_toc_options[:cell].new(headers: level_1_headers)
+
+        left_toc_html = ::Cell.({template: left_toc_options[:template], exec_context: left_toc_cell})
+
+        ctx[:left_toc_html] = left_toc_html
+      end
+
+      def self.page_layout(ctx, layout:, left_toc_html:, content:, **options)
+         layout_cell_instance = layout[:cell].new(left_toc_html: left_toc_html, version_options: options) # DISCUSS: what options to hand in here?
+
+                sections_html = content
+
+                result = ::Cell.({template: layout[:template], exec_context: layout_cell_instance}) { sections_html }
+
+        ctx[:content] = result.to_s
+      end
+
+      class RenderOther < Trailblazer::Activity::Railway
+        # step Page.method(:render_page), id: :render_page # TODO: add {render_section}
+        step Page.method(:left_toc)
+        step Page.method(:page_layout)
       end
     end
   end

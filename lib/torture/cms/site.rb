@@ -3,7 +3,7 @@ require "fileutils"
 module Torture
   module Cms
     class Site
-      def render_pages(pages, **site_options)
+      def render_pages(pages, render_activity: Page::RenderOther, **site_options)
 
         pages = pages.collect do |name, book_options|
           [
@@ -38,18 +38,9 @@ module Torture
               if layout.is_a?(Hash) # FIXME: only add when needed.
                 level_1_headers = Helper::Toc::Versioned.collapsable(headers, expanded: book) # "view model" for {toc_left}.
 
-                left_toc_options = layout[:left_toc]
-                left_toc_cell = left_toc_options[:cell].new(headers: level_1_headers)
+                signal, (ctx, _) = render_activity.({level_1_headers: level_1_headers, **options})
 
-                left_toc_html = ::Cell.({template: left_toc_options[:template], exec_context: left_toc_cell})
-
-                layout_cell_instance = layout[:cell].new(left_toc_html: left_toc_html, version_options: options) # DISCUSS: what options to hand in here?
-
-                sections_html = options[:content]
-
-                result = ::Cell.({template: layout[:template], exec_context: layout_cell_instance}) { sections_html }
-
-                [version, options.merge(content: result.to_s)]
+                [version, options.merge(content: ctx[:content])]
               else
                 [version, options]
               end
@@ -90,7 +81,7 @@ module Torture
         dir = File.dirname(target_file)
         FileUtils.mkdir_p(dir) # TODO: test that properly.
 
-        File.open(target_file, "w") { |file| file.write(content) }
+        File.open(target_file, "w+") { |file| file.write(content) } # TODO: test w+ override
       end
     end
   end

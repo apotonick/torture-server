@@ -4,6 +4,8 @@ module Torture
   end
 end
 
+require "trailblazer/activity/dsl/linear"
+
 require "torture/cms/dsl"
 require "torture/cms/site"
 require "torture/cms/page"

@@ -13,7 +13,7 @@ class ReformTest < Minitest::Spec
     false.must_equal false
 
     #:deep
-    99.must_equal 99
+    assert 99 >= 99
     #:deep end
 
   end

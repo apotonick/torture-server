@@ -57,7 +57,7 @@ class TortureServerTest < Minitest::Spec
 
 <p>test with <code>code span</code>.</p>
 
-<pre class="mt-4"><code class="rounded">99.must_equal 99
+<pre class="mt-4"><code class="rounded">assert 99 &gt;= 99
 </code></pre>
 
 <pre class="mt-4"><code class="rounded">
@@ -177,7 +177,7 @@ and profound</code></pre>
 
 <p>test with <code>code span</code>.</p>
 
-<pre><code>99.must_equal 99
+<pre><code>assert 99 &gt;= 99
 </code></pre>
 
 <pre><code>
@@ -256,7 +256,7 @@ done.
 
 <p class="mt-6">test with <code class="purple">code span</code>.</p>
 
-<pre><code>99.must_equal 99
+<pre><code>assert 99 &gt;= 99
 </code></pre>
 
 <pre><code>
@@ -337,7 +337,7 @@ and profound</code></pre>
 
 <p>test with <code>code span</code>.</p>
 
-<pre><code>99.must_equal 99
+<pre><code>assert 99 &gt;= 99
 </code></pre>
 
 <pre><code>
@@ -369,7 +369,7 @@ and profound</code></pre>
 #     "test\n" +
 #     "\n" +
 #     "\n" +
-#     "<pre><code>99.must_equal 99\n" +
+#     "<pre><code>assert 99 &gt;= 99\n" +
 #     "</code></pre>\n" +
 #     "\n" +
 #     "\n" +
@@ -418,7 +418,7 @@ and profound</code></pre>
 # test
 
 
-# <pre><code>99.must_equal 99
+# <pre><code>assert 99 &gt;= 99
 # </code></pre>
 
 
