@@ -63,8 +63,8 @@ module Torture
         ctx[:left_toc_html] = left_toc_html
       end
 
-      def self.page_layout(ctx, layout:, left_toc_html:, content:, **options)
-         layout_cell_instance = layout[:cell].new(left_toc_html: left_toc_html, version_options: options) # DISCUSS: what options to hand in here?
+      def self.page_layout(ctx, layout:, left_toc_html:, right_tocs_html:, content:, **options) # FIXME: left_toc_html and rig
+         layout_cell_instance = layout[:cell].new(left_toc_html: left_toc_html, right_tocs_html: right_tocs_html, version_options: options) # DISCUSS: what options to hand in here?
 
                 sections_html = content
 

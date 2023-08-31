@@ -38,7 +38,8 @@ module Torture
               if layout.is_a?(Hash) # FIXME: only add when needed.
                 level_1_headers = Helper::Toc::Versioned.collapsable(headers, expanded: book) # "view model" for {toc_left}.
 
-                signal, (ctx, _) = render_activity.({level_1_headers: level_1_headers, **options})
+                                    # RenderOther
+                signal, (ctx, _) = render_activity.({level_1_headers: level_1_headers, headers: headers, **options})
 
                 [version, options.merge(content: ctx[:content])]
               else
