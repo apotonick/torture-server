@@ -54,15 +54,6 @@ module Torture
         return html, result
       end
 
-      def self.left_toc(ctx, layout:, level_1_headers:, **)
-        left_toc_options = layout[:left_toc]
-        left_toc_cell = left_toc_options[:cell].new(headers: level_1_headers)
-
-        left_toc_html = ::Cell.({template: left_toc_options[:template], exec_context: left_toc_cell})
-
-        ctx[:left_toc_html] = left_toc_html
-      end
-
       def self.render_cell(ctx, cell:, options_for_cell:, **)
         options_for_cell, block = normalize_cell_arguments(**options_for_cell)
 
@@ -73,13 +64,18 @@ module Torture
         ctx[:content] = result.to_s
       end
 
-      def self.normalize_cell_arguments(yield_block:, **options_for_cell)
+      def self.normalize_cell_arguments(yield_block: nil, **options_for_cell)
         return options_for_cell, yield_block
       end
 
       class RenderOther < Trailblazer::Activity::Railway
         # step Page.method(:render_page), id: :render_page # TODO: add {render_section}
-        step Page.method(:left_toc)
+
+        # Render left_toc.
+        step Page.method(:render_cell).clone,
+          id: :left_toc,
+          In() => ->(ctx, layout:, level_1_headers:, **) { {cell: {context_class: layout[:left_toc][:context_class], template: layout[:left_toc][:template]}, options_for_cell: {headers: level_1_headers}} },
+          Out() => {:content => :left_toc_html}
 
         # Render "page layout" (not the app layout).
         step Page.method(:render_cell),
