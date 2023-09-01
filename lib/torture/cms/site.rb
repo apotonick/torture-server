@@ -39,8 +39,8 @@ module Torture
                 level_1_headers = Helper::Toc::Versioned.collapsable(headers, expanded: book) # "view model" for {toc_left}.
 
                                     # RenderOther
-                signal, (ctx, _) = render_activity.({level_1_headers: level_1_headers, headers: headers, **options})
 
+                signal, (ctx, _) = Trailblazer::Activity.(render_activity, {level_1_headers: level_1_headers, headers: headers, **options})
                 [version, options.merge(content: ctx[:content])]
               else
                 [version, options]

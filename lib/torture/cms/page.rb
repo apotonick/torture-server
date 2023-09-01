@@ -63,20 +63,30 @@ module Torture
         ctx[:left_toc_html] = left_toc_html
       end
 
-      def self.page_layout(ctx, layout:, left_toc_html:, right_tocs_html:, content:, **options) # FIXME: left_toc_html and rig
-         layout_cell_instance = layout[:cell].new(left_toc_html: left_toc_html, right_tocs_html: right_tocs_html, version_options: options) # DISCUSS: what options to hand in here?
+      def self.render_cell(ctx, cell:, options_for_cell:, **)
+        options_for_cell, block = normalize_cell_arguments(**options_for_cell)
 
-                sections_html = content
+        cell_instance = cell[:context_class].new(**options_for_cell)
 
-                result = ::Cell.({template: layout[:template], exec_context: layout_cell_instance}) { sections_html }
+        result = ::Cell.({template: cell[:template], exec_context: cell_instance}) { block }
 
         ctx[:content] = result.to_s
+      end
+
+      def self.normalize_cell_arguments(yield_block:, **options_for_cell)
+        return options_for_cell, yield_block
       end
 
       class RenderOther < Trailblazer::Activity::Railway
         # step Page.method(:render_page), id: :render_page # TODO: add {render_section}
         step Page.method(:left_toc)
-        step Page.method(:page_layout)
+
+        # Render "page layout" (not the app layout).
+        step Page.method(:render_cell),
+          id: :render_page,
+          # In() => {:layout => :cell_options},
+          # In() => [:left_toc_html, :content],
+          In() => ->(ctx, layout:, left_toc_html:, content:, **options) { {cell: layout, options_for_cell: {yield_block: content, left_toc_html: left_toc_html, version_options: options}} }
       end
     end
   end

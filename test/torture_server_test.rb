@@ -102,7 +102,7 @@ and profound</code></pre>
     end
 
     left_toc_template = Cell::Erb::Template.new("test/cms/layouts/left_toc.erb")
-    layout_options = {cell: layout, template: layout_template, left_toc: {cell: left_toc, template: left_toc_template}} # DISCUSS: with .md, too?
+    layout_options = {context_class: layout, template: layout_template, left_toc: {cell: left_toc, template: left_toc_template}} # DISCUSS: with .md, too?
 
     pages = {
       "reform" => {
