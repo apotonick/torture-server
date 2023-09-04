@@ -68,21 +68,7 @@ module Torture
         return options_for_cell, yield_block
       end
 
-      class RenderOther < Trailblazer::Activity::Railway
-        # step Page.method(:render_page), id: :render_page # TODO: add {render_section}
-
-        # Render left_toc.
-        step Page.method(:render_cell).clone,
-          id: :left_toc,
-          In() => ->(ctx, layout:, level_1_headers:, **) { {cell: {context_class: layout[:left_toc][:context_class], template: layout[:left_toc][:template]}, options_for_cell: {headers: level_1_headers}} },
-          Out() => {:content => :left_toc_html}
-
-        # Render "page layout" (not the app layout).
-        step Page.method(:render_cell),
-          id: :render_page,
-          # In() => {:layout => :cell_options},
-          # In() => [:left_toc_html, :content],
-          In() => ->(ctx, layout:, left_toc_html:, content:, **options) { {cell: layout, options_for_cell: {yield_block: content, left_toc_html: left_toc_html, version_options: options}} }
+      class Render < Trailblazer::Activity::Railway
       end
     end
   end

@@ -3,7 +3,7 @@ require "fileutils"
 module Torture
   module Cms
     class Site
-      def render_pages(pages, render_activity: Page::RenderOther, **site_options)
+      def render_pages(pages, **site_options)
 
         pages = pages.collect do |name, book_options|
           [
@@ -33,18 +33,18 @@ module Torture
         pages_by_version =
           pages.collect do |book, versions|
             versions.collect do |version, options|
-              layout = options[:layout]
+              # layout = options[:layout]
+              render_activity = options[:render] || raise
 
-              if layout.is_a?(Hash) # FIXME: only add when needed.
+              # if layout.is_a?(Hash) # FIXME: only add when needed.
                 level_1_headers = Helper::Toc::Versioned.collapsable(headers, expanded: book) # "view model" for {toc_left}.
 
-                                    # RenderOther
-
+                                                        # Render
                 signal, (ctx, _) = Trailblazer::Activity.(render_activity, {level_1_headers: level_1_headers, headers: headers, **options})
                 [version, options.merge(content: ctx[:content])]
-              else
-                [version, options]
-              end
+              # else
+              #   [version, options]
+              # end
             end
           end
       end
