@@ -27,7 +27,7 @@ class TortureServerTest < Minitest::Spec
     # Render left_toc.
     step Torture::Cms::Page.method(:render_cell).clone,
       id: :left_toc,
-      In() => ->(ctx, layout:, level_1_headers:, **) { {cell: {context_class: layout[:left_toc][:context_class], template: layout[:left_toc][:template]}, options_for_cell: {headers: level_1_headers}} },
+      In() => ->(ctx, layout:, level_1_headers:, **) { {context_class: layout[:left_toc][:context_class], template: layout[:left_toc][:template], options_for_cell: {headers: level_1_headers}} },
       Out() => {:content => :left_toc_html}
 
     # Render "page layout" (not the app layout).
@@ -35,7 +35,7 @@ class TortureServerTest < Minitest::Spec
       id: :render_page,
       # In() => {:layout => :cell_options},
       # In() => [:left_toc_html, :content],
-      In() => ->(ctx, layout:, left_toc_html:, content:, **options) { {cell: layout, options_for_cell: {yield_block: content, left_toc_html: left_toc_html, version_options: options}} }
+      In() => ->(ctx, layout:, left_toc_html:, content:, **options) { {**layout, options_for_cell: {yield_block: content, left_toc_html: left_toc_html, version_options: options}} }
   end
 
   let(:reform_index) {

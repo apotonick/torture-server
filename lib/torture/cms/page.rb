@@ -54,12 +54,13 @@ module Torture
         return html, result
       end
 
-      def self.render_cell(ctx, cell:, options_for_cell:, **)
+      # Generic entrypoint for rendering a particular cell.
+      def self.render_cell(ctx, context_class:, template:, options_for_cell:, **)
         options_for_cell, block = normalize_cell_arguments(**options_for_cell)
 
-        cell_instance = cell[:context_class].new(**options_for_cell)
+        cell_instance = context_class.new(**options_for_cell)
 
-        result = ::Cell.({template: cell[:template], exec_context: cell_instance}) { block }
+        result = ::Cell.({template: template, exec_context: cell_instance}) { block }
 
         ctx[:content] = result.to_s
       end
