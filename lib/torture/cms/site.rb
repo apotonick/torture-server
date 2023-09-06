@@ -36,15 +36,12 @@ module Torture
               # layout = options[:layout]
               render_activity = options[:render] || raise
 
-              # if layout.is_a?(Hash) # FIXME: only add when needed.
-                level_1_headers = Helper::Toc::Versioned.collapsable(headers, expanded: book) # "view model" for {toc_left}.
+              level_1_headers = Helper::Toc::Versioned.collapsable(headers, expanded: book) # "view model" for {toc_left}.
 
-                                                        # Render
-                signal, (ctx, _) = Trailblazer::Activity.(render_activity, {level_1_headers: level_1_headers, headers: headers, **options})
-                [version, options.merge(content: ctx[:content])]
-              # else
-              #   [version, options]
-              # end
+                                                      # Render
+              signal, (ctx, _) = Trailblazer::Activity.(render_activity, {level_1_headers: level_1_headers, headers: headers, **options})
+
+              [version, options.merge(content: ctx[:content])]
             end
           end
       end
