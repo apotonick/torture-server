@@ -79,6 +79,10 @@ class TortureServerTest < Minitest::Spec
 
 <pre class="mt-4"><code class="rounded">
 and profound</code></pre>
+
+<h4 id="reform-introduction-deep-profound-deepest" class="">Deep &amp; profound / Deepest</h4>
+
+<p>So deep.</p>
 )
   end
 
@@ -205,6 +209,10 @@ and profound</code></pre>
 <pre><code>
 and profound</code></pre>
 
+<h4 id="reform-introduction-deep-profound-deepest" class="">Deep &amp; profound / Deepest</h4>
+
+<p>So deep.</p>
+
 <h2 id=\"reform-api\" class=\"\">API</h2>
 
 <p>Too complex in 2.x.</p>
@@ -283,6 +291,10 @@ done.
 
 <pre><code>
 and profound</code></pre>
+
+<h4 id="reform-introduction-deep-profound-deepest" class="">Deep &amp; profound / Deepest</h4>
+
+<p class="mt-6">So deep.</p>
 )
   end
 
@@ -364,6 +376,10 @@ and profound</code></pre>
 
 <pre><code>
 and profound</code></pre>
+
+<h4 id="reform-introduction-deep-profound-deepest" class="">Deep &amp; profound / Deepest</h4>
+
+<p>So deep.</p>
 
 <p>Object</p>
 )
