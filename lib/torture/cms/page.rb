@@ -1,7 +1,7 @@
 module Torture
   module Cms
 
-    class Page
+    class Page # TODO: rename to {render_sections}
       def render_page(title:, sections:, target_url:, **options)
         # NOTE: this is the real local version title, not the {:toc_title}.
         page_header = Torture::Toc.Header(title, 1, {id: nil}, target: target_url) # FIXME: remove mutability.

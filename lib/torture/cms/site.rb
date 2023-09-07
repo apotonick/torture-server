@@ -30,6 +30,7 @@ module Torture
 
       # TODO: additional step
       #       layout
+      # Render the actual page with TOC.
         pages_by_version =
           pages.collect do |book, versions|
             versions.collect do |version, options|
@@ -39,7 +40,7 @@ module Torture
               level_1_headers = Helper::Toc::Versioned.collapsable(headers, expanded: book) # "view model" for {toc_left}.
 
                                                       # Render
-              signal, (ctx, _) = Trailblazer::Activity.(render_activity, {level_1_headers: level_1_headers, headers: headers, **options})
+              signal, (ctx, _) = Trailblazer::Activity.(render_activity, {level_1_headers: level_1_headers, **options})
 
               [version, options.merge(content: ctx[:content])]
             end
