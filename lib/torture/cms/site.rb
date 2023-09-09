@@ -14,7 +14,7 @@ module Torture
 
       # TODO: additional step
       #       headers
-        headers =
+        h1_headers =
           pages.collect do |name, versions|
             versions =
               versions.collect do |version, options|
@@ -37,7 +37,7 @@ module Torture
               # layout = options[:layout]
               render_activity = options[:render] || raise
 
-              level_1_headers = Helper::Toc::Versioned.collapsable(headers, expanded: book) # "view model" for {toc_left}.
+              level_1_headers = Helper::Toc::Versioned.collapsable(h1_headers, expanded: book) # "view model" for {toc_left}.
 
                                                       # Render
               signal, (ctx, _) = Trailblazer::Activity.(render_activity, {level_1_headers: level_1_headers, **options})
