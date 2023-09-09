@@ -30,6 +30,17 @@ class DSLTest < Minitest::Spec
           target_file: "test/site/2.1/docs/cells/5.0/index.html",
         }
       },
+      "pro" => {
+        toc_title: "Pro",
+        toc_left: false,
+        "2.1" => {
+          title: "Pro",
+          snippet_dir: nil,
+          section_dir: nil,
+          target_file: "test/site/2.1/pro/index.html",
+          target_url: "/2.1/pro/index.html"
+        }
+      }
     }
 
     books = Torture::Cms::DSL.(pages)
@@ -61,7 +72,21 @@ class DSLTest < Minitest::Spec
         {:render=>Module,
          :snippet_dir=>"test/cells-5/",
          :section_dir=>"test/sections/cells/5.0",
-         :target_file=>"test/site/2.1/docs/cells/5.0/index.html"}}}}}
+         :target_file=>"test/site/2.1/docs/cells/5.0/index.html"}}}},
+  "pro"=>
+    {:toc_title=>"Pro",
+     :toc_left=>false, # {:toc_left} is here.
+     :versions=>
+      {"2.1"=>
+        {:sections=>{},
+         :options=>
+          {:render=>Module,
+           :title=>"Pro",
+           :snippet_dir=>nil,
+           :section_dir=>nil,
+           :target_file=>"test/site/2.1/pro/index.html",
+           :target_url=>"/2.1/pro/index.html"}}}}
+       }
 
   end
 end

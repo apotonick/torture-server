@@ -1,4 +1,4 @@
-<% @options[:headers].each do |header| %>
+<% @options[:headers].each do |header| %><%- next if header.options[:visible] == false %>
   <div>
     <b><a href="<%= header.options[:target] %>"><%= header.title %></a></b><% header.items.each do |h2| %>
       <a href="<%= h2.options[:target] %>"><%= h2.title %></a><% end %>

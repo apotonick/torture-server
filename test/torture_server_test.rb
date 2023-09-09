@@ -165,6 +165,17 @@ and profound</code></pre>
           target_url:  "/2.1/docs/cells/5.0",
         }
       },
+      "pro" => {
+        toc_title: "Pro",
+        toc_left: false,
+        "2.1" => {
+          title: "Pro",
+          snippet_dir: nil,
+          section_dir: nil,
+          target_file: "test/site/2.1/pro/index.html",
+          target_url: "/2.1/pro/index.html"
+        }
+      }
     }
 
 
