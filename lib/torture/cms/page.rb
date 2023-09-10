@@ -7,14 +7,17 @@ module Torture
         page_header = Torture::Toc.Header(title, 1, {id: nil}, target: target_url, visible: toc_left) # FIXME: remove mutability.
 
         headers     = {1 => [page_header], 2 => [], 3 => [], 4 => [], 5 => []} # mutable state, hmm.
+        page_files  = []
 
         ["<h1>#{title}</h1>\n"] + # FIXME
 
         # generate section
         html_sections = sections.collect do |file_name, section_options|
-          html, result = render_section(**options, **section_options, file_name: file_name, headers: headers)
+          html, result, options_from_section = render_section(**options, **section_options, file_name: file_name, headers: headers)
+
 
           headers = result.to_h[:headers] # TODO: additional step!
+          page_files = collect_filenames_for_caching(page_files, **options_from_section)
 
           html
         end
@@ -25,12 +28,13 @@ module Torture
           title: title,
           content:      sections_html,
           headers:      headers,
+          page_files:   page_files,
         )
       end
 
       def render_section(file_name:, section_dir:, headers:, snippet_dir:, snippet_file:, section_cell:, section_cell_options:, kramdown_options: {}, **)
-        template_file = File.join(section_dir, file_name) # "test/cms/snippets/reform/intro.md.erb"
-        template      = Cell::Erb::Template.new(template_file)
+        template_filename = File.join(section_dir, file_name) # "test/cms/snippets/reform/intro.md.erb"
+        template = Cell::Erb::Template.new(template_filename)
 
         section_cell_instance = section_cell.new(
           headers: headers,
@@ -51,7 +55,11 @@ module Torture
 
         html = Kramdown::Document.new(html, kramdown_options).send(convert_method)
 
-        return html, result
+        return html, result, {file_name: template_filename}
+      end
+
+      private def collect_filenames_for_caching(page_files, file_name:, **)
+        page_files += [file_name]
       end
 
       # Generic entrypoint for rendering a particular cell.
