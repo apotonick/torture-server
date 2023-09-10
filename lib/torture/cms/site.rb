@@ -31,7 +31,7 @@ module Torture
       # TODO: additional step
         page_file_map = pages.flat_map do |name, versions|
           versions.flat_map  do |version, options|
-            options[:page_files].collect { |file_name| [file_name, [name, version]] }
+            options[:sections].collect { |section| [section[:options][:file_name], [name, version]] }
           end
         end.to_h
 

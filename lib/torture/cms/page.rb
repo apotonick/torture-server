@@ -7,28 +7,29 @@ module Torture
         page_header = Torture::Toc.Header(title, 1, {id: nil}, target: target_url, visible: toc_left) # FIXME: remove mutability.
 
         headers     = {1 => [page_header], 2 => [], 3 => [], 4 => [], 5 => []} # mutable state, hmm.
-        page_files  = []
 
         ["<h1>#{title}</h1>\n"] + # FIXME
 
         # generate section
-        html_sections = sections.collect do |file_name, section_options|
+        sections = sections.collect do |file_name, section_options|
           html, result, options_from_section = render_section(**options, **section_options, file_name: file_name, headers: headers)
 
 
           headers = result.to_h[:headers] # TODO: additional step!
-          page_files = collect_filenames_for_caching(page_files, **options_from_section)
 
-          html
+          {
+            content: html,
+            options: options_from_section,
+          }
         end
 
-        sections_html = html_sections.join("\n")
+        sections_html = sections.collect { |section| section[:content] }.join("\n")
 
         options.merge(
           title: title,
           content:      sections_html,
           headers:      headers,
-          page_files:   page_files,
+          sections:     sections,
         )
       end
 
@@ -56,10 +57,6 @@ module Torture
         html = Kramdown::Document.new(html, kramdown_options).send(convert_method)
 
         return html, result, {file_name: template_filename}
-      end
-
-      private def collect_filenames_for_caching(page_files, file_name:, **)
-        page_files += [file_name]
       end
 
       # Generic entrypoint for rendering a particular cell.
