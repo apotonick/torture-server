@@ -5,6 +5,7 @@ module Torture
     class Site
       def render_pages(pages, **site_options)
 
+        # Render only the concated sections per page.
         pages = pages.collect do |name, book_options|
           [
             name,
@@ -35,7 +36,7 @@ module Torture
           end
         end.to_h
 
-        pp page_file_map
+        # pp page_file_map
 
       # TODO: additional step
       #       layout
@@ -44,16 +45,21 @@ module Torture
           pages.collect do |book, versions|
             versions.collect do |version, options|
               # layout = options[:layout]
-              render_activity = options[:render] || raise
-
-              level_1_headers = Helper::Toc::Versioned.collapsable(h1_headers, expanded: book) # "view model" for {toc_left}.
-
-                                                      # Render
-              signal, (ctx, _) = Trailblazer::Activity.(render_activity, {level_1_headers: level_1_headers, **options})
+              ctx = render_final_page(book, h1_headers: h1_headers, **options)
 
               [version, options.merge(content: ctx[:content])]
             end
           end
+      end
+
+      def render_final_page(book, render:, h1_headers:, **options)
+        # FIXME: move to render activity!
+        level_1_headers = Helper::Toc::Versioned.collapsable(h1_headers, expanded: book) # "view model" for {toc_left}.
+
+                                                # Render
+        signal, (ctx, _) = Trailblazer::Activity.(render, {level_1_headers: level_1_headers, **options})
+
+        return ctx
       end
 
       def render_versioned_book(versions:, **site_options)
