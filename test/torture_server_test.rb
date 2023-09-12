@@ -58,7 +58,7 @@ class TortureServerTest < Minitest::Spec
   it "accepts {pre} and {code} classes" do
     pages = Torture::Cms::DSL.(reform_index)
 
-    pages = Torture::Cms::Site.new.render_pages(pages, section_cell: My::Cell::Section, section_cell_options: {controller: nil,
+    pages, _ = Torture::Cms::Site.new.render_pages(pages, section_cell: My::Cell::Section, section_cell_options: {controller: nil,
       pre_attributes: {class: "mt-4"},
       code_attributes: {class: "rounded"},
     })
@@ -186,7 +186,9 @@ and profound</code></pre>
     # pp books
     # raise
 
-    pages = Torture::Cms::Site.new.render_pages(books, section_cell: My::Cell::Section, section_cell_options: {controller: nil})
+    pages, returned, = Torture::Cms::Site.new.render_pages(books, section_cell: My::Cell::Section, section_cell_options: {controller: nil})
+
+    assert_equal returned.keys.inspect, %([:file_to_page_map, :h1_headers]) # FIXME: improve this test.
 
     assert_equal pages[0].to_h["2.3"][:target_file], "test/site/2.1/docs/reform/index.html"
 
@@ -284,7 +286,7 @@ done.
 
     pages = Torture::Cms::DSL.(reform_index)
 
-    pages = Torture::Cms::Site.new.render_pages(pages, section_cell: My::Cell::Section, section_cell_options: {controller: nil}, kramdown_options: {converter: "to_fuckyoukramdown"})
+    pages, _ = Torture::Cms::Site.new.render_pages(pages, section_cell: My::Cell::Section, section_cell_options: {controller: nil}, kramdown_options: {converter: "to_fuckyoukramdown"})
 
     assert_equal pages[0].to_h["2.3"][:target_file], "test/site/2.1/docs/reform/index.html"
     content = pages[0].to_h["2.3"][:content]
@@ -349,7 +351,9 @@ and profound</code></pre>
 
     pages = Torture::Cms::DSL.(pages)
 
-    pages = Torture::Cms::Site.new.produce_versioned_pages(pages, section_cell: My::Cell::Section, section_cell_options: {controller: Object})
+    pages, returned = Torture::Cms::Site.new.produce_versioned_pages(pages, section_cell: My::Cell::Section, section_cell_options: {controller: Object})
+
+    assert_equal returned.keys.inspect, %([:file_to_page_map, :h1_headers])
 
     assert_equal `tree test/site`, %(test/site
 └── 2.1

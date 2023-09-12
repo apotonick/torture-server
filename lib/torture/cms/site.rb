@@ -50,6 +50,8 @@ module Torture
               [version, options.merge(content: ctx[:content])]
             end
           end
+
+        return pages_by_version, {file_to_page_map: page_file_map, h1_headers: h1_headers} # TODO: return values, test.
       end
 
       def render_final_page(book, render:, h1_headers:, **options)
@@ -74,13 +76,16 @@ module Torture
       end
 
       def produce_versioned_pages(pages, **options)
-        pages = render_pages(pages, **options)
+        pages, returned = render_pages(pages, **options)
 
-        pages.collect do |versions|
-          versions.collect do |version, _options|
-            produce_page(**_options)
+        artifacts =
+          pages.collect do |versions|
+            versions.collect do |version, _options|
+              produce_page(**_options)
+            end
           end
-        end
+
+        return artifacts, returned # FIXME: test.
       end
 
       def render_page(**options)
