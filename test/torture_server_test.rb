@@ -40,6 +40,7 @@ class TortureServerTest < Minitest::Spec
 
   let(:reform_index) {
     pages = {
+      render: Torture::Cms::Page::Render,
       "reform" => {
         title: "Reform",
         "2.3" => {
@@ -126,6 +127,7 @@ and profound</code></pre>
     layout_options = {context_class: layout, template: layout_template, left_toc: {context_class: left_toc, template: left_toc_template}} # DISCUSS: with .md, too?
 
     pages = {
+      render: Torture::Cms::Page::Render,
       "reform" => {
         toc_title: "Reform",
         "2.3" => {
@@ -315,6 +317,7 @@ and profound</code></pre>
 
   it "what" do
     pages = {
+      render: Torture::Cms::Page::Render,
       "cells" => {
         title: "Cells",
         "4.0" => { # "prefix/version"

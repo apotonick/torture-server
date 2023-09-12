@@ -4,6 +4,7 @@ class DSLTest < Minitest::Spec
   it "what" do
     pages = {
       render: Module,
+      section_cell: Object,
       "reform" => {
         toc_title: "Reform",
         "2.3" => {
@@ -45,13 +46,15 @@ class DSLTest < Minitest::Spec
 
     books = Torture::Cms::DSL.(pages)
 # pp books
-    assert_equal books, {"reform"=>
+    assert_equal books, {
+ "reform"=>
   {:toc_title=>"Reform",
    :versions=>
     {"2.3"=>
       {:sections=>{"intro.md.erb"=>{:snippet_file=>"intro_test.rb"}},
        :options=>
         {:render=>Object,
+         :section_cell=>Object,
          :snippet_dir=>"test/code/reform",
          :section_dir=>"test/sections/reform",
          :target_file=>"test/site/2.1/docs/reform/index.html",
@@ -63,6 +66,7 @@ class DSLTest < Minitest::Spec
       {:sections=>{"overview.md.erb"=>{:snippet_file=>"cell_test.rb"}},
        :options=>
         {:render=>Module,
+         :section_cell=>Object,
          :snippet_dir=>"test/cells/",
          :section_dir=>"test/sections/cells/4.0",
          :target_file=>"test/site/2.1/docs/cells/index.html"}},
@@ -70,6 +74,7 @@ class DSLTest < Minitest::Spec
       {:sections=>{},
        :options=>
         {:render=>Module,
+         :section_cell=>Object,
          :snippet_dir=>"test/cells-5/",
          :section_dir=>"test/sections/cells/5.0",
          :target_file=>"test/site/2.1/docs/cells/5.0/index.html"}}}},
@@ -81,6 +86,7 @@ class DSLTest < Minitest::Spec
         {:sections=>{},
          :options=>
           {:render=>Module,
+           :section_cell=>Object,
            :title=>"Pro",
            :snippet_dir=>nil,
            :section_dir=>nil,

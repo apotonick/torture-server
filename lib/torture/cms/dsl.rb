@@ -3,7 +3,7 @@ module Torture
     module DSL
       # Transform public configuration structure to something better to work with internally.
       def self.call(pages)
-        top_level_options, pages = normalize_top_level_options(**pages)
+        top_level_options, pages = normalize_top_level_options(pages)
 
         pages.collect do |book, options|
           versions      = options.find_all { |k, v| k.is_a?(String) }.to_h
@@ -32,8 +32,11 @@ module Torture
         end.to_h
       end
 
-      def self.normalize_top_level_options(render: Page::Render, **pages)
-        return {render: render}, pages
+      def self.normalize_top_level_options(mixed_options)
+        pages = mixed_options.find_all { |k, v| k.is_a?(String) }.to_h
+        options = mixed_options.slice(*(mixed_options.keys - pages.keys)) # FIXME: abstract.
+
+        return options, pages
       end
     end
   end
