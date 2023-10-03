@@ -81,7 +81,7 @@ class TortureServerTest < Minitest::Spec
 <pre class="mt-4"><code class="rounded">
 and profound</code></pre>
 
-<h4 id="reform-introduction-deep-profound-deepest" class="">Deep &amp; profound / Deepest</h4>
+<h4 id="reform-introduction-deep-profound-deepest" class="">Deepest</h4>
 
 <p>So deep.</p>
 )
@@ -224,7 +224,7 @@ and profound</code></pre>
 <pre><code>
 and profound</code></pre>
 
-<h4 id="reform-introduction-deep-profound-deepest" class="">Deep &amp; profound / Deepest</h4>
+<h4 id="reform-introduction-deep-profound-deepest" class="">Deepest</h4>
 
 <p>So deep.</p>
 
@@ -307,9 +307,53 @@ done.
 <pre><code>
 and profound</code></pre>
 
-<h4 id="reform-introduction-deep-profound-deepest" class="">Deep &amp; profound / Deepest</h4>
+<h4 id="reform-introduction-deep-profound-deepest" class="">Deepest</h4>
 
 <p class="mt-6">So deep.</p>
+)
+  end
+
+  it "allows using different section cell implementation for overriding {#h4}" do
+    class MySectionCellWithH4 < My::Cell::Section
+      class MyBreadcrumbRender < Torture::Cms::Helper::Header::Render
+        step :render_breadcrumb, replace: :render_header
+
+        def render_breadcrumb(ctx, header:, classes:, title:, parent_header:, **)
+          ctx[:html] = %{<h4 id="#{header.id}" class="#{classes}">#{parent_header.title} / #{title}</h4>}
+        end
+      end
+
+      def h4(title, render: MyBreadcrumbRender, **options)
+        super
+      end
+    end
+
+    pages = Torture::Cms::DSL.(reform_index)
+
+    pages, _ = Torture::Cms::Site.new.render_pages(pages, section_cell: MySectionCellWithH4, section_cell_options: {controller: nil})
+
+    assert_equal pages[0].to_h["2.3"][:target_file], "test/site/2.1/docs/reform/index.html"
+    content = pages[0].to_h["2.3"][:content]
+
+    #@ <p> has class!
+    assert_equal content,
+%(<h2 id="reform-introduction" class="">Introduction</h2>
+
+<p>Deep stuff.</p>
+
+<h3 id="reform-introduction-deep-profound" class="">Deep &amp; profound</h3>
+
+<p>test with <code>code span</code>.</p>
+
+<pre><code>assert 99 &gt;= 99 # model=&gt;#&lt;Song name=\"nil\"&gt;
+</code></pre>
+
+<pre><code>
+and profound</code></pre>
+
+<h4 id="reform-introduction-deep-profound-deepest" class="">Deep &amp; profound / Deepest</h4>
+
+<p>So deep.</p>
 )
   end
 
@@ -395,7 +439,7 @@ and profound</code></pre>
 <pre><code>
 and profound</code></pre>
 
-<h4 id="reform-introduction-deep-profound-deepest" class="">Deep &amp; profound / Deepest</h4>
+<h4 id="reform-introduction-deep-profound-deepest" class="">Deepest</h4>
 
 <p>So deep.</p>
 

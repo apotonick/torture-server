@@ -9,43 +9,43 @@ module Torture
         # 4 render_header
 
         # Currently called "book".
-        def h2(title, name: title, level: 2, display_title: title, classes: "", **) # FIXME: classes not tested and sucks.
-          header, top_header = header_for!(title, level)
-
-          # header = %{<h#{level} id="#{header.id}">#{display_title}</h#{level}> <!-- {#{header.id}-toc} -->}
-
-
-          render_header(header: header, level: level, display_title: display_title, classes: classes)
+        def h2(title, level: 2, **options)
+          header_for(title: title, level: level, **options)
         end
 
         # Currently called "chapter".
-        def h3(title, classes: "", **options)
-          header, top_header = header_for!(title, 3, **options)
-
-          render_header(header: header, display_title: title, level: 3, classes: classes, **options)
+        def h3(title, level: 3, **options)
+          header_for(title: title, level: level, **options)
         end
 
-        def h4(title, level: 4, classes: "", **options) # FIXME: test me.
-          header, top_header = header_for!(title, level, **options)
-
-          breadcrumb = %(#{top_header.title} / #{title})
-
-          render_header(header: header, level: level, display_title: breadcrumb, classes: classes)
+        def h4(title, level: 4, **options)
+          header_for(title: title, level: level, **options)
         end
 
-        private def header_for!(title, level, **options)
-          top_header = @options[:headers][level-1].last
+        def header_for(render: Render, title:, classes: "", **options)
+          signal, (ctx, _) = Trailblazer::Activity.(render, headers: @options[:headers], display_title: title, title: title, classes: classes, **options)
+
+          ctx[:html]
+        end
+
+        def self.header_for!(ctx, title:, level:, headers:, **options)
+          top_header = headers[level-1].last
           raise title unless top_header
 
-          @options[:headers][level] << header = Torture::Toc::Header(title, level, top_header, **options)
+          headers[level] << header = Torture::Toc::Header(title, level, top_header, **options)
           top_header.items << header
 
-          return header, top_header
+          ctx[:header]        = header
+          ctx[:parent_header] = top_header
         end
 
-        private def render_header(header:, level:, display_title:, classes:)
-          header = %{<h#{level} id="#{header.id}" class="#{classes}">#{display_title}</h#{level}>}
-          # return html
+        def self.render_header(ctx, header:, level:, display_title:, classes:, **)
+          ctx[:html] = %{<h#{level} id="#{header.id}" class="#{classes}">#{display_title}</h#{level}>}
+        end
+
+        class Render < Trailblazer::Activity::Railway
+          step Header.method(:header_for!),   id: :create_header!
+          step Header.method(:render_header), id: :render_header
         end
       end
     end
