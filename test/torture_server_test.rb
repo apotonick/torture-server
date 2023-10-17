@@ -21,7 +21,7 @@ class TortureServerTest < Minitest::Spec
     end
   end
 
-  class RenderWithLeftTocAndPageLayout < Trailblazer::Activity::Railway
+  class RenderWithLeftTocAndPageLayout < Torture::Cms::Page::Render::WithToc
     # step Torture::Cms::Page.method(:render_page), id: :render_page # TODO: add {render_section}
 
     # Render left_toc.

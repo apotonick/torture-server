@@ -3,8 +3,13 @@ require "fileutils"
 module Torture
   module Cms
     class Site
-      def render_pages(pages, **site_options)
+      def render_pages(pages, site_render: Trb, **site_options)
+        signal, (ctx, _) = site_render.invoke([{pages: pages, **site_options}, {}])
 
+        return ctx[:pages], {file_to_page_map: ctx[:page_file_map], h1_headers: ctx[:h1_headers]}
+      end
+
+      def self.render_pages_(ctx, pages:, toc: true, **site_options) # FIXME: fix toc
         # Render only the concated sections per page.
         pages = pages.collect do |name, book_options|
           [
@@ -13,10 +18,17 @@ module Torture
           ]
         end.to_h
 
+        ctx[:pages] = pages
+      end
+
+      # We need to do that on all pages.
+      def self.extract_h1_headers(ctx, pages:, **)
       # TODO: additional step
       #       headers
         h1_headers =
           pages.collect do |name, versions|
+            next if versions.first[1][:toc] == false # FIXME: somehow, this TOTALLY sucks. # TODO: test me
+
             versions =
               versions.collect do |version, options|
                 h1 = options[:headers][1][0] || raise
@@ -28,7 +40,12 @@ module Torture
 
             [name, versions]
           end
+            .compact # this sucks, we need that for {toc: false}
 
+        ctx[:h1_headers] = h1_headers
+      end
+
+      def self.page_file_map(ctx, pages:, **)
       # TODO: additional step
         page_file_map = pages.flat_map do |name, versions|
           versions.flat_map  do |version, options|
@@ -36,8 +53,12 @@ module Torture
           end
         end.to_h
 
+        ctx[:page_file_map] = page_file_map
+      end
+
         # pp page_file_map
 
+      def self.render_final_pages(ctx, pages:, h1_headers:, **)
       # TODO: additional step
       #       layout
       # Render the actual page with TOC.
@@ -45,27 +66,25 @@ module Torture
           pages.collect do |book, versions|
             versions.collect do |version, options|
               # layout = options[:layout]
-              ctx = render_final_page(book, h1_headers: h1_headers, **options)
+              _ctx = render_final_page(book, h1_headers: h1_headers, **options)
 
-              [version, options.merge(content: ctx[:content])]
+              [version, options.merge(content: _ctx[:content])]
             end
           end
 
-        return pages_by_version, {file_to_page_map: page_file_map, h1_headers: h1_headers} # TODO: return values, test.
+        ctx[:pages] = pages_by_version
       end
 
-      def render_final_page(book, render:, h1_headers:, **options)
-        # FIXME: move to render activity!
-        level_1_headers = Helper::Toc::Versioned.collapsable(h1_headers, expanded: book) # "view model" for {toc_left}.
-
+      def self.render_final_page(book, render:, **options)
                                                 # Render
-        signal, (ctx, _) = Trailblazer::Activity.(render, {level_1_headers: level_1_headers, **options})
+        signal, (ctx, _) = Trailblazer::Activity.(render, {book: book, **options})
 
         return ctx
       end
 
-      def render_versioned_book(versions:, **site_options)
+      def self.render_versioned_book(versions:, **site_options)
         versions.collect do |version, version_options|
+
           result = render_page(**site_options, sections: version_options[:sections], **version_options[:options])
 
           [
@@ -88,7 +107,7 @@ module Torture
         return artifacts, returned # FIXME: test.
       end
 
-      def render_page(**options)
+      def self.render_page(**options)
         Torture::Cms::Page.new.render_page(**options)
       end
 
@@ -102,6 +121,14 @@ module Torture
 
         File.open(target_file, "w+") { |file| file.write(content) } # TODO: test w+ override
       end
+
+      class Trb < Trailblazer::Activity::Railway # FIXME: move.
+        step Site.method(:render_pages_)
+        step Site.method(:extract_h1_headers)
+        step Site.method(:page_file_map)
+        step Site.method(:render_final_pages)
+      end
+
     end
   end
 end

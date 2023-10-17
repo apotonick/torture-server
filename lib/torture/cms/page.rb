@@ -75,6 +75,13 @@ module Torture
       end
 
       class Render < Trailblazer::Activity::Railway
+        class WithToc < Trailblazer::Activity::Railway
+          step :compile_level_1_headers # FIXME.
+
+          def compile_level_1_headers(ctx, book:, h1_headers:, **)
+            ctx[:level_1_headers] = Helper::Toc::Versioned.collapsable(h1_headers, expanded: book) # "view model" for {toc_left}.
+          end
+        end
       end
     end
   end
