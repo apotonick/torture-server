@@ -145,6 +145,7 @@ and profound</code></pre>
           },
           "reform.md.erb" => {section_dir: "test/sections/generic", snippet_file: "reform_test.rb", snippet_dir: "test/code/generic"},
           # "controller.md.erb" => { snippet_file: "intro_test.rb" }, # uses @options[:controller]
+          "overview.md.erb" => { snippet_file: "intro_test.rb" }, # tests {code(code_attributes: {})}
         }
       },
       "cells" => {
@@ -203,6 +204,7 @@ and profound</code></pre>
     <b><a href="/2.1/docs/reform">Reform</a></b>
       <a href="">Introduction</a>
       <a href="">API</a>
+      <a href="">Overview</a>
   </div>
 
   <div>
@@ -236,6 +238,16 @@ and profound</code></pre>
 </code></pre>
 
 <pre><code>Module
+</code></pre>
+
+<h2 id="reform-overview" class="">Overview</h2>
+
+<pre><code class="rounded mt-1">class Form
+end
+</code></pre>
+
+<pre><code>class Form
+end
 </code></pre>
 
 done.

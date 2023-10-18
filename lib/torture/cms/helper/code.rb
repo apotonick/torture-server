@@ -3,7 +3,7 @@ module Torture
     # Helpers are for cells!
     module Helper
       module Code
-        def code(*args, **kws)
+        def code(*args, code_tag_attributes: nil, **kws)
           dont_extract = @options[:extract] === false
           code = ""
 
@@ -17,7 +17,7 @@ module Torture
 
           escaped_code = code.gsub("<", "&lt;").gsub(">", "&gt;") # this is sometimes not done properly in the "final" Kramdown run on section level.
 
-          %(<pre #{html_attributes(@options[:pre_attributes])}><code #{html_attributes(@options[:code_attributes])}>#{escaped_code}</code></pre>)
+          %(<pre #{html_attributes(@options[:pre_attributes])}><code #{html_attributes(code_tag_attributes, @options[:code_attributes])}>#{escaped_code}</code></pre>)
         end
 
         # def extract(section, root:, file:, collapse: nil, unindent: true)
@@ -34,7 +34,8 @@ module Torture
           Torture::Snippet.extract_from(file: File.join(root, file), marker: section, collapse: collapse, unindent: unindent, sub: sub)
         end
 
-        private def html_attributes(options)
+        private def html_attributes(user_options, options=nil)
+          options = user_options || options
           return if options.nil?
 
           options.collect { |k,v| %(#{k}="#{v}") }.join(" ")
