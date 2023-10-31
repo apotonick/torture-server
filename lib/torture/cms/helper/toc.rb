@@ -9,9 +9,11 @@ module Torture
         module Versioned #< Struct.new(:headers, :current)
 
           # {level_1_headers} is an array of [book_headers, <currently expanded [book,version]>]
-          def initialize(level_1_headers:)
+          def initialize(level_1_headers:, iterate_context_class: Iterated)
             @book_headers, expanded = level_1_headers
             @expanded_book_name, @expanded_version = expanded
+
+            @iterate_context_class = iterate_context_class
           end
 
 
@@ -55,13 +57,15 @@ module Torture
             end
           end
 
-          def iterate(items, exec_context_class: Iterated, &block)
+          def iterate(items, exec_context_class: @iterate_context_class, **options_for_new, &block)
             items.collect do |item|
               exec_context_class.new(
                 item: item,
 
                 expanded_book_name: @expanded_book_name, # FIXME: abstract, we're copying over ivars from the collection-host.
-                expanded_version:   @expanded_version
+                expanded_version:   @expanded_version,
+
+                **options_for_new
 
               ).instance_exec(item, &block)
             end
