@@ -2,7 +2,9 @@ module Torture
   module Cms
     module Helper
       module Toc
-        # H1 = Struct.new(:title, :items) # H1
+        # TODO: for the rendering layer, move to user app?
+        # Left = Struct.new(:title, :target_url, :items, :versions, :is_expanded) # H1
+
         class Versioned #< Struct.new(:headers, :current)
 
           # def initialize(headers)
@@ -15,19 +17,10 @@ module Torture
           #   @headers.each(&block)
           # end
 
+          # TODO: 2BRM
           def self.collapsable(headers, expanded:)
-            headers.collect do |title, versions|
-              expanded_version = versions.keys.first # FIXME: make this dynamic, obviously.
+            return [headers, expanded]
 
-              h1 = versions[expanded_version].first # FIXME: why is that an array?
-
-              if title == expanded
-                h1
-              else
-
-                Torture::Toc::Header.new(h1.title, h1.level, h1.id, [], h1.options)
-              end
-            end
           end
         end # Versioned
       end

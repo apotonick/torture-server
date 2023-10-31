@@ -9,7 +9,7 @@ module Torture
         return ctx[:pages], {file_to_page_map: ctx[:page_file_map], h1_headers: ctx[:h1_headers]}
       end
 
-      def self.render_pages_(ctx, pages:, toc: true, **site_options) # FIXME: fix toc
+      def self.render_pages_(ctx, pages:, **site_options)
         # Render only the concated sections per page.
         pages = pages.collect do |name, book_options|
           [
@@ -18,19 +18,26 @@ module Torture
           ]
         end.to_h
 
+        # pp site_options[:book_headers]
         ctx[:pages] = pages
       end
 
       # We need to do that on all pages.
       def self.extract_h1_headers(ctx, pages:, **)
+        Header::Extract.compile_left_toc(ctx, pages: pages)
+
+
       # TODO: additional step
       #       headers
         h1_headers =
           pages.collect do |name, versions|
-            next if versions.first[1][:toc] == false # FIXME: somehow, this TOTALLY sucks. # TODO: test me
+            # raise versions.first.inspect
+            # next if versions.first[1][:toc] == false # FIXME: somehow, this TOTALLY sucks. # TODO: test me
 
             versions =
               versions.collect do |version, options|
+
+
                 h1 = options[:headers][1][0] || raise
                 h1 = h1.dup
                 h1.title = options[:toc_title] # set the "sidebar title" on this header.
@@ -43,6 +50,74 @@ module Torture
             .compact # this sucks, we need that for {toc: false}
 
         ctx[:h1_headers] = h1_headers
+      end
+
+      module Header
+        # Header for left toc.
+        Book = Struct.new(:name, :toc_title, :versions_to_h2_headers, :include_in_toc) do
+          def default_version
+            versions_to_h2_headers.keys[0]
+          end
+        end
+
+        module Extract
+          module_function
+
+          # At this point, we don't have any h2 headers, yet.
+          # This is before we render actual pages and collect h[2,3,4] headers.
+          def compute_h1_headers(ctx, pages:, **)
+            h1_headers =
+              pages.collect do |name, options|
+                toc_title = options.fetch(:toc_title)
+                include_in_toc = options[:include_in_toc]
+
+                _versions =
+                  options[:versions].collect do |version, version_options|
+                    title       = version_options[:options][:title]
+                    target_url  = version_options[:options][:target_url]
+
+                    page_header = Torture::Toc.Header(title, 1, {id: nil}, target: target_url) # FIXME: remove mutability.
+
+                    [version, page_header]
+                  end
+                  .to_h
+
+                # DISCUSS: different "layer"
+                book_header = Book.new(
+                  name,
+                  toc_title,
+                  _versions,
+                  include_in_toc
+                )
+
+                [name, book_header]
+              end
+              .to_h
+
+            ctx[:book_headers] = h1_headers
+          end
+
+          def compile_left_toc(ctx, pages:, **)
+            pages.collect do |name, versions|
+              versions =
+                versions.collect do |version, options|
+                  raise options[:headers].inspect
+
+                  h1 = options[:headers][1][0] || raise
+                  h1 = h1.dup
+                  h1.title = options[:toc_title] # set the "sidebar title" on this header.
+
+                  [version, [h1]]
+                end.to_h
+
+              [name, versions]
+            end
+          end
+
+          def compile_right_toc
+
+          end
+        end
       end
 
       def self.page_file_map(ctx, pages:, **)
@@ -58,7 +133,7 @@ module Torture
 
         # pp page_file_map
 
-      def self.render_final_pages(ctx, pages:, h1_headers:, **)
+      def self.render_final_pages(ctx, pages:, book_headers:, **)
       # TODO: additional step
       #       layout
       # Render the actual page with TOC.
@@ -66,7 +141,7 @@ module Torture
           pages.collect do |book, versions|
             versions.collect do |version, options|
               # layout = options[:layout]
-              _ctx = render_final_page(book, h1_headers: h1_headers, **options)
+              _ctx = render_final_page([book, version], headers: book_headers, **options)
 
               [version, options.merge(content: _ctx[:content])]
             end
@@ -75,9 +150,10 @@ module Torture
         ctx[:pages] = pages_by_version
       end
 
-      def self.render_final_page(book, render:, **options)
+      def self.render_final_page(book_version, render:, **options)
+
                                                 # Render
-        signal, (ctx, _) = Trailblazer::Activity.(render, {book: book, **options})
+        signal, (ctx, _) = Trailblazer::Activity.(render, {book_version: book_version, **options})
 
         return ctx
       end
@@ -85,7 +161,7 @@ module Torture
       def self.render_versioned_book(versions:, **site_options)
         versions.collect do |version, version_options|
 
-          result = render_page(**site_options, sections: version_options[:sections], **version_options[:options])
+          result = render_page(**site_options, sections: version_options[:sections], version: version, **version_options[:options])
 
           [
             version,
@@ -123,8 +199,8 @@ module Torture
       end
 
       class Trb < Trailblazer::Activity::Railway # FIXME: move.
+        step Site::Header::Extract.method(:compute_h1_headers)
         step Site.method(:render_pages_)
-        step Site.method(:extract_h1_headers)
         step Site.method(:page_file_map)
         step Site.method(:render_final_pages)
       end

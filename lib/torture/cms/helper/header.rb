@@ -29,14 +29,23 @@ module Torture
         end
 
         def self.header_for!(ctx, title:, level:, headers:, **options)
-          top_header = headers[level-1].last
-          raise title unless top_header
+          parent_header = find_last_header(headers, level - 1)
 
-          headers[level] << header = Torture::Toc::Header(title, level, top_header, **options)
-          top_header.items << header
+          raise title unless parent_header
+
+          header = Torture::Toc::Header(title, level, parent_header, **options)
+          parent_header.items << header # FIXME: mutating {:headers}
 
           ctx[:header]        = header
-          ctx[:parent_header] = top_header
+          ctx[:parent_header] = parent_header
+        end
+
+        def self.find_last_header(header, level)
+          if header.level == level
+            return header
+          end
+
+          find_last_header(header.items.last, level)
         end
 
         def self.render_header(ctx, header:, level:, display_title:, classes:, **)

@@ -166,11 +166,14 @@ and profound</code></pre>
           section_dir: "test/sections/cells/5.0",
           target_file: "test/site/2.1/docs/cells/5.0/index.html",
           target_url:  "/2.1/docs/cells/5.0",
+          layout:       layout_options,
+          "overview.md.erb" => { snippet_file: "cell_test.rb" },
+          render: RenderWithLeftTocAndPageLayout,
         }
       },
       "pro" => {
         toc_title: "Pro",
-        toc_left: false,
+        include_in_toc: false,
         "2.1" => {
           title: "Pro",
           snippet_dir: nil,
@@ -196,16 +199,23 @@ and profound</code></pre>
     reform_content = pages[0].to_h["2.3"][:content]
 
     #@ <p> has class!
+    # puts reform_content.gsub("  ", "@@")
     assert_equal reform_content,
 %(Layout.
 <h1>Reform documentation</h1>
 
+
+
+
+
   <div>
     <b><a href="/2.1/docs/reform">Reform</a></b>
-      <a href="">Introduction</a>
-      <a href="">API</a>
-      <a href="">Overview</a>
+      <a href="#reform-introduction">Introduction</a>
+      <a href="#reform-api">API</a>
+      <a href="#reform-overview">Overview</a>
   </div>
+
+
 
   <div>
     <b><a href="/2.1/docs/cells">Cells</a></b>
@@ -259,13 +269,19 @@ done.
 %(Layout.
 <h1>Cells 4 documentation</h1>
 
+
+
+
+
   <div>
     <b><a href="/2.1/docs/reform">Reform</a></b>
   </div>
 
+
+
   <div>
     <b><a href="/2.1/docs/cells">Cells</a></b>
-      <a href="">What's a cell?</a>
+      <a href="#cells-4-what-s-a-cell-">What's a cell?</a>
   </div>
 
 
@@ -278,6 +294,35 @@ done.
   <li>a</li>
   <li>comprehensive list.</li>
 </ul>
+
+done.
+)
+
+    cell_content = pages[1].to_h["5.0"][:content]
+
+    assert_equal cell_content,
+%(Layout.
+<h1>Cells 5 documentation</h1>
+
+
+
+
+
+  <div>
+    <b><a href="/2.1/docs/reform">Reform</a></b>
+  </div>
+
+
+
+  <div>
+    <b><a href="/2.1/docs/cells">Cells</a></b>
+      <a href=\"#cells-5-wip\">WIP</a>
+  </div>
+
+
+<h2 id=\"cells-5-wip\" class=\"\">WIP</h2>
+
+<p>Cells 5 coming soon. :D</p>
 
 done.
 )
