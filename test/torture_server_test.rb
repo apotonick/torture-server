@@ -27,7 +27,7 @@ class TortureServerTest < Minitest::Spec
     # Render left_toc.
     step Torture::Cms::Page.method(:render_cell).clone,
       id: :left_toc,
-      In() => ->(ctx, layout:, level_1_headers:, **) { {context_class: layout[:left_toc][:context_class], template: layout[:left_toc][:template], options_for_cell: {headers: level_1_headers}} },
+      In() => ->(ctx, layout:, level_1_headers:, **) { {context_class: layout[:left_toc][:context_class], template: layout[:left_toc][:template], options_for_cell: {level_1_headers: level_1_headers}} },
       Out() => {:content => :left_toc_html}
 
     # Render "page layout" (not the app layout).
@@ -114,9 +114,10 @@ and profound</code></pre>
     layout_template = Cell::Erb::Template.new("test/cms/layouts/documentation.erb")
 
     left_toc = Class.new do
-      def initialize(headers:)
-        @options = {headers: headers}
-      end
+      # def initialize(headers:)
+      #   @options = {headers: headers}
+      # end
+      include Torture::Cms::Helper::Toc::Versioned
 
       def to_h
         {}
@@ -204,18 +205,12 @@ and profound</code></pre>
 %(Layout.
 <h1>Reform documentation</h1>
 
-
-
-
-
   <div>
     <b><a href="/2.1/docs/reform">Reform</a></b>
       <a href="#reform-introduction">Introduction</a>
       <a href="#reform-api">API</a>
       <a href="#reform-overview">Overview</a>
   </div>
-
-
 
   <div>
     <b><a href="/2.1/docs/cells">Cells</a></b>
@@ -269,15 +264,9 @@ done.
 %(Layout.
 <h1>Cells 4 documentation</h1>
 
-
-
-
-
   <div>
     <b><a href="/2.1/docs/reform">Reform</a></b>
   </div>
-
-
 
   <div>
     <b><a href="/2.1/docs/cells">Cells</a></b>
@@ -304,15 +293,9 @@ done.
 %(Layout.
 <h1>Cells 5 documentation</h1>
 
-
-
-
-
   <div>
     <b><a href="/2.1/docs/reform">Reform</a></b>
   </div>
-
-
 
   <div>
     <b><a href="/2.1/docs/cells"><version>5.0</version>Cells</a></b>

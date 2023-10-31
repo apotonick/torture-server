@@ -1,10 +1,6 @@
-<% headers = @options[:headers][0] %><% expanded = @options[:headers][1] %><% expanded_name, expanded_version = expanded %>
-
-<% headers.each do |name, book_h1| %><%- next if book_h1.include_in_toc == false %>
-<% items = name == expanded_name ? book_h1.versions_to_h2_headers[expanded_version].items : [] %>
-<% default_version = book_h1.default_version %><% version_folder = (name == expanded_name && expanded_version != default_version) ? %(<version>#{expanded_version}</version>) : "" %>
+<% iterate @book_headers do |name, book_h1| %><%- next if book_h1.include_in_toc == false %>
   <div>
-    <b><a href="<%= book_h1.versions_to_h2_headers[default_version].options[:target] %>"><%= version_folder %><%= book_h1.toc_title %></a></b><% items.each do |h2| %>
+    <b><a href="<%= default_version_target %>"><%= version_folder %><%= book_h1.toc_title %></a></b><% expanded_items.each do |h2| %>
       <a href="#<%= h2.id %>"><%= h2.title %></a><% end %>
   </div>
 <% end %>
