@@ -11,8 +11,6 @@ module Torture
         page_h1 = book_headers.fetch(name)[:versions_to_h2_headers].fetch(version) # FIXME: 1. immutability, 2. this is very specific to TOCs.
 
 
-        ["<h1>#{title}</h1>\n"] + # FIXME
-
         # generate section
         sections = sections.collect do |file_name, section_options|
           html, result, options_from_section = render_section(**options, **section_options, file_name: file_name, headers: page_h1)
