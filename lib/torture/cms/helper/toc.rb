@@ -57,20 +57,23 @@ module Torture
             end
           end
 
-          def iterate(items, exec_context_class: @iterate_context_class, **options_for_new, &block)
-            items.collect do |item|
-              exec_context_class.new(
-                item: item,
+          module Iterate
+            def iterate(items, exec_context_class: @iterate_context_class, **options_for_new, &block)
+              items.collect do |item|
+                exec_context_class.new(
+                  item: item,
 
-                expanded_book_name: @expanded_book_name, # FIXME: abstract, we're copying over ivars from the collection-host.
-                expanded_version:   @expanded_version,
+                  expanded_book_name: @expanded_book_name, # FIXME: abstract, we're copying over ivars from the collection-host.
+                  expanded_version:   @expanded_version,
 
-                **options_for_new
+                  **options_for_new
 
-              ).instance_exec(item, &block)
+                ).instance_exec(item, &block)
+              end
+              .join("\n")
             end
-            .join("\n")
           end
+          include Iterate
 
         end # Versioned
       end
