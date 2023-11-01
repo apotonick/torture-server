@@ -22,36 +22,6 @@ module Torture
         ctx[:pages] = pages
       end
 
-      # We need to do that on all pages.
-      def self.extract_h1_headers(ctx, pages:, **)
-        Header::Extract.compile_left_toc(ctx, pages: pages)
-
-
-      # TODO: additional step
-      #       headers
-        h1_headers =
-          pages.collect do |name, versions|
-            # raise versions.first.inspect
-            # next if versions.first[1][:toc] == false # FIXME: somehow, this TOTALLY sucks. # TODO: test me
-
-            versions =
-              versions.collect do |version, options|
-
-
-                h1 = options[:headers][1][0] || raise
-                h1 = h1.dup
-                h1.title = options[:toc_title] # set the "sidebar title" on this header.
-
-                [version, [h1]]
-              end.to_h
-
-            [name, versions]
-          end
-            .compact # this sucks, we need that for {toc: false}
-
-        ctx[:h1_headers] = h1_headers
-      end
-
       module Header
         # Header for left toc.
         Book = Struct.new(:name, :toc_title, :versions_to_h2_headers, :include_in_toc) do
@@ -95,27 +65,6 @@ module Torture
               .to_h
 
             ctx[:book_headers] = h1_headers
-          end
-
-          def compile_left_toc(ctx, pages:, **)
-            pages.collect do |name, versions|
-              versions =
-                versions.collect do |version, options|
-                  raise options[:headers].inspect
-
-                  h1 = options[:headers][1][0] || raise
-                  h1 = h1.dup
-                  h1.title = options[:toc_title] # set the "sidebar title" on this header.
-
-                  [version, [h1]]
-                end.to_h
-
-              [name, versions]
-            end
-          end
-
-          def compile_right_toc
-
           end
         end
       end
