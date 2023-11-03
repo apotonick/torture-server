@@ -87,7 +87,6 @@ module Torture
 
           # Run per page.
           def compile_level_1_headers(ctx, book_version:, book_headers:, **)
-            # pp book_headers
             # ctx[:level_1_headers] = Helper::Toc::Versioned.collapsable(book_headers, expanded: book_version) # "view model" for {toc_left}.
             ctx[:level_1_headers] = [book_headers, book_version]
 

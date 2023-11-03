@@ -42,8 +42,9 @@ class TortureServerTest < Minitest::Spec
     pages = {
       render: Torture::Cms::Page::Render,
       "reform" => {
-        title: "Reform",
+        toc_title: "Reform",
         "2.3" => {
+          title: "Reform",
           snippet_dir: "test/code/reform",
           section_dir: "test/sections/reform",
           target_file: "test/site/2.1/docs/reform/index.html",
@@ -58,7 +59,7 @@ class TortureServerTest < Minitest::Spec
   it "accepts {pre} and {code} classes" do
     pages = Torture::Cms::DSL.(reform_index)
 
-    pages, _ = Torture::Cms::Site.new.render_pages(pages, section_cell: My::Cell::Section, section_cell_options: {controller: nil,
+    pages, _ = Torture::Cms::Site.render_pages(pages, section_cell: My::Cell::Section, section_cell_options: {controller: nil,
       pre_attributes: {class: "mt-4"},
       code_attributes: {class: "rounded"},
     })
@@ -191,9 +192,9 @@ and profound</code></pre>
     # pp books
     # raise
 
-    pages, returned, = Torture::Cms::Site.new.render_pages(books, section_cell: My::Cell::Section, section_cell_options: {controller: nil})
+    pages, returned, = Torture::Cms::Site.render_pages(books, section_cell: My::Cell::Section, section_cell_options: {controller: nil})
 
-    assert_equal returned.keys.inspect, %([:file_to_page_map, :h1_headers]) # FIXME: improve this test.
+    assert_equal returned.keys.inspect, %([:file_to_page_map, :book_headers]) # FIXME: improve this test.
 
     assert_equal pages[0].to_h["2.3"][:target_file], "test/site/2.1/docs/reform/index.html"
 
@@ -326,7 +327,7 @@ done.
 
     pages = Torture::Cms::DSL.(reform_index)
 
-    pages, _ = Torture::Cms::Site.new.render_pages(pages, section_cell: My::Cell::Section, section_cell_options: {controller: nil}, kramdown_options: {converter: "to_fuckyoukramdown"})
+    pages, _ = Torture::Cms::Site.render_pages(pages, section_cell: My::Cell::Section, section_cell_options: {controller: nil}, kramdown_options: {converter: "to_fuckyoukramdown"})
 
     assert_equal pages[0].to_h["2.3"][:target_file], "test/site/2.1/docs/reform/index.html"
     content = pages[0].to_h["2.3"][:content]
@@ -370,7 +371,7 @@ and profound</code></pre>
 
     pages = Torture::Cms::DSL.(reform_index)
 
-    pages, _ = Torture::Cms::Site.new.render_pages(pages, section_cell: MySectionCellWithH4, section_cell_options: {controller: nil})
+    pages, _ = Torture::Cms::Site.render_pages(pages, section_cell: MySectionCellWithH4, section_cell_options: {controller: nil})
 
     assert_equal pages[0].to_h["2.3"][:target_file], "test/site/2.1/docs/reform/index.html"
     content = pages[0].to_h["2.3"][:content]
@@ -405,8 +406,9 @@ and profound</code></pre>
     pages = {
       render: Torture::Cms::Page::Render,
       "cells" => {
-        title: "Cells",
+        toc_title: "Cells",
         "4.0" => { # "prefix/version"
+          title: "Cells 4",
           snippet_dir: "test/cells/",
           section_dir: "test/sections/cells/4.0",
           target_file: "test/site/2.1/docs/cells/index.html",
@@ -414,6 +416,7 @@ and profound</code></pre>
           "overview.md.erb" => { snippet_file: "cell_test.rb" }
         },
         "5.0" => {
+          title: "Cells",
           snippet_dir: "test/cells-5/",
           section_dir: "test/sections/cells/5.0",
           target_file: "test/site/2.1/docs/cells/5.0/index.html",
@@ -421,8 +424,9 @@ and profound</code></pre>
         }
       },
       "reform" => {
-        title: "Reform",
+        toc_title: "Reform",
         "2.3" => {
+          title: "Reform",
           snippet_dir: "test/code/reform",
           section_dir: "test/sections/reform",
           target_file: "test/site/2.1/docs/reform/index.html",
@@ -435,9 +439,9 @@ and profound</code></pre>
 
     pages = Torture::Cms::DSL.(pages)
 
-    pages, returned = Torture::Cms::Site.new.produce_versioned_pages(pages, section_cell: My::Cell::Section, section_cell_options: {controller: Object})
+    pages, returned = Torture::Cms::Site.produce_versioned_pages(pages, section_cell: My::Cell::Section, section_cell_options: {controller: Object})
 
-    assert_equal returned.keys.inspect, %([:file_to_page_map, :h1_headers])
+    assert_equal returned.keys.inspect, %([:file_to_page_map, :book_headers])
 
     assert_equal `tree test/site`, %(test/site
 └── 2.1
@@ -454,7 +458,7 @@ and profound</code></pre>
 
     assert_equal File.open("test/site/2.1/docs/cells/5.0/index.html").read, %()
     assert_equal File.open("test/site/2.1/docs/cells/index.html").read,
-%(<h2 id="cells-what-s-a-cell-" class="">What's a cell?</h2>
+%(<h2 id="cells-4-what-s-a-cell-" class="">What's a cell?</h2>
 
 <p>Paragraph needs an a tag.</p>
 

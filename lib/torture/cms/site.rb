@@ -3,10 +3,10 @@ require "fileutils"
 module Torture
   module Cms
     class Site
-      def render_pages(pages, site_render: Trb, **site_options)
+      def self.render_pages(pages, site_render: Trb, **site_options)
         signal, (ctx, _) = site_render.invoke([{pages: pages, **site_options}, {}])
 
-        return ctx[:pages], {file_to_page_map: ctx[:page_file_map], h1_headers: ctx[:h1_headers]}
+        return ctx[:pages], {file_to_page_map: ctx[:page_file_map], book_headers: ctx[:book_headers]}
       end
 
       def self.render_pages_(ctx, pages:, **site_options)
@@ -24,7 +24,7 @@ module Torture
 
       module Header
         # Header for left toc.
-        Book = Struct.new(:name, :toc_title, :versions_to_h2_headers, :include_in_toc) do
+        Book = Struct.new(:name, :toc_title, :versions_to_h2_headers, :include_in_toc, :options) do
           def default_version
             versions_to_h2_headers.keys[0]
           end
@@ -35,36 +35,37 @@ module Torture
 
           # At this point, we don't have any h2 headers, yet.
           # This is before we render actual pages and collect h[2,3,4] headers.
-          def compute_h1_headers(ctx, pages:, **)
-            h1_headers =
+          def compute_book_headers(ctx, pages:, **)
+            book_headers =
               pages.collect do |name, options|
-                toc_title = options.fetch(:toc_title)
-                include_in_toc = options[:include_in_toc]
 
                 _versions =
                   options[:versions].collect do |version, version_options|
                     title       = version_options[:options][:title]
                     target_url  = version_options[:options][:target_url]
 
-                    page_header = Torture::Toc.Header(title, 1, {id: nil}, target: target_url) # FIXME: remove mutability.
+                    page_header = Torture::Toc.Header(title, 1, {id: nil}, target: target_url, options_for_toc: version_options[:options][:options_for_toc]) # FIXME: remove mutability.
 
                     [version, page_header]
                   end
                   .to_h
 
                 # DISCUSS: different "layer"
+                toc_title       = options.fetch(:toc_title)
+                include_in_toc  = options[:include_in_toc]
+
                 book_header = Book.new(
                   name,
                   toc_title,
                   _versions,
-                  include_in_toc
+                  include_in_toc,
                 )
 
                 [name, book_header]
               end
               .to_h
 
-            ctx[:book_headers] = h1_headers
+            ctx[:book_headers] = book_headers
           end
         end
       end
@@ -119,7 +120,7 @@ module Torture
         end.to_h
       end
 
-      def produce_versioned_pages(pages, **options)
+      def self.produce_versioned_pages(pages, **options)
         pages, returned = render_pages(pages, **options)
 
         artifacts =
@@ -136,11 +137,11 @@ module Torture
         Torture::Cms::Page.new.render_page(**options)
       end
 
-      def produce_page(**options)
+      def self.produce_page(**options)
         create_file(**options)
       end
 
-      def create_file(target_file:, content:, **)
+      def self.create_file(target_file:, content:, **)
         dir = File.dirname(target_file)
         FileUtils.mkdir_p(dir) # TODO: test that properly.
 
@@ -148,7 +149,7 @@ module Torture
       end
 
       class Trb < Trailblazer::Activity::Railway # FIXME: move.
-        step Site::Header::Extract.method(:compute_h1_headers)
+        step Site::Header::Extract.method(:compute_book_headers)
         step Site.method(:render_pages_)
         step Site.method(:page_file_map)
         step Site.method(:render_final_pages)
