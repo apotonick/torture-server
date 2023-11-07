@@ -3,7 +3,11 @@ module Torture
     # Helpers are for cells!
     module Helper
       module Code
-        def code(*args, code_tag_attributes: nil, **kws)
+        def code(marker, **kws, &block)
+          render_code(marker: marker, **kws, &block)
+        end
+
+        def render_code(marker:, code_tag_attributes: nil, **options)
           dont_extract = @options[:extract] === false
           code = ""
 
@@ -12,7 +16,7 @@ module Torture
             code = yield.chomp
           end
 
-          code = dont_extract ? code : extract(*args, **kws)
+          code = dont_extract ? code : extract(marker, **options)
           # Kramdown::Document.new("\n\t#{code.gsub("\n", "\n\t")}").to_html
 
           escaped_code = code.gsub("<", "&lt;").gsub(">", "&gt;") # this is sometimes not done properly in the "final" Kramdown run on section level.
